@@ -1,46 +1,35 @@
 import pygame
-import time
 
 class Player:
-    def __init__(self, x, y, width, height, lp, lane_positions):
-        self.width = width
-        self.height = height
-        self.lp = lp
+    def __init__(self, x, lane_positions):
+        self.width = 50
+        self.height = 50
         self.lane_positions = lane_positions
-        self.current_lane = 1 # Start in the middle lane
-        self.x = self.lane_positions[self.current_lane]
-        self.y = y
+        self.target_lane = 1
+        self.current_lane = 1
+        self.x = x
+        self.y = 500
+        self.speed = 730
 
-    def move_to_lane(self, target_lane):
-        target_x = self.lane_positions[target_lane]
-        while abs(self.x - target_x) > 1:
-            self.x += (target_x - self.x) * 0.01 # smooth movement
-            time.sleep(0.15) # delay to make movement visible
-            self.x = max(min(self.x, target_x), target_x) # Ensure x doesnt overshoot
+    def update(self, dt):
+        target_x = self.lane_positions[self.target_lane]
+        if self.x != target_x:
+            step = self.speed * dt
+            distance = target_x - self.x
 
-        self.x = target_x # snap to target lane position
-        self.current_lane = target_lane
+            if abs(distance) > step:
+                self.x += step * (distance / abs(distance))
+            else:
+                self.x = target_x
+                self.current_lane = self.target_lane
 
     def move_left(self):
         if self.current_lane > 0:
-            self.move_to_lane(self.current_lane - 1)
-
+            self.target_lane = self.current_lane - 1
 
     def move_right(self):
         if self.current_lane < len(self.lane_positions) - 1:
-            self.move_to_lane(self.current_lane + 1)
+            self.target_lane = self.current_lane + 1
 
     def draw(self, screen):
         pygame.draw.rect(screen, (0, 0, 255), (self.x, self.y, self.width, self.height))
-
-    def get_position(self):
-        return self.x, self.y
-    
-    def get_size(self):
-        return self.width, self.height
-    
-    def get_lp(self):
-        return self.lp
-    
-    def set_lp(self, lp):
-        self.lp = lp
