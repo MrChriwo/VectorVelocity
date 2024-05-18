@@ -1,6 +1,7 @@
 import pygame
 import sys
 from player import Player
+import settings
 
 class Game:
     def __init__(self):
@@ -8,11 +9,11 @@ class Game:
         pygame.init()
         
         # Set up the display
-        self.screen = pygame.display.set_mode((800, 600))  # Width: 800px, Height: 600px
-        pygame.display.set_caption('Vector Velocity - Pygame')
+        self.screen = pygame.display.set_mode((settings.SCREEN_WIDTH, settings.SCREEN_HEIGHT))
+        pygame.display.set_caption(settings.CAPTION)
         
-        # Define lane positions (left, middle, right)
-        self.lane_positions = [200, 400, 600]
+        # Define lane positions
+        self.lane_positions = settings.LANE_POSITIONS
         
         # Create a player instance
         self.player = Player(self.lane_positions[1], 500, 50, 50, 100, self.lane_positions) # start in the middle lane
@@ -55,7 +56,7 @@ class Game:
             self.draw()
             
             # Cap the frame rate
-            self.clock.tick(60)
+            self.clock.tick(settings.FRAME_RATE)
         
         self.quit()
     
