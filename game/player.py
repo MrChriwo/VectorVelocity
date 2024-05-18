@@ -11,6 +11,10 @@ class Player:
         self.y = 500
         self.speed = 730
 
+    @property
+    def rect(self):
+        return pygame.Rect(self.x, self.y, self.width, self.height)
+
     def update(self, dt):
         target_x = self.lane_positions[self.target_lane]
         if self.x != target_x:
@@ -32,4 +36,4 @@ class Player:
             self.target_lane = self.current_lane + 1
 
     def draw(self, screen):
-        pygame.draw.rect(screen, (0, 0, 255), (self.x, self.y, self.width, self.height))
+        pygame.draw.rect(screen, (0, 0, 255), self.rect)

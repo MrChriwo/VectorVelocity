@@ -3,14 +3,22 @@ from obstacle import Obstacle
 import random
 
 class SpawnManager: 
-    def __init__(self, gameScreen: pygame.Surface, lane_positions: list):
+    def __init__(self, player, gameScreen, quitGame, lane_positions: list):
         self.gameScreen = gameScreen
+        self.player = player
         self.lane_positions = lane_positions
         self.obstacles = []
         self.used_lanes = []
         self.spawn_timer = 0
         self.spawn_rate = 2
         self.speed = 2
+        self.quitGame = quitGame
+
+    def check_collisions(self, player):
+        for obstacle in self.obstacles:
+            if player.rect.colliderect(obstacle.rect):
+                print("collision detected, game over")
+                self.quitGame()
 
     def spawn_obstacles(self):
         count = random.randint(1, 2)
@@ -31,6 +39,8 @@ class SpawnManager:
        
 
     def update(self, dt):
+        self.check_collisions(self.player)
+
         self.spawn_timer += dt
         if self.spawn_timer >= self.spawn_rate:
             self.spawn_timer = 0

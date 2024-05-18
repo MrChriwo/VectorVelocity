@@ -21,7 +21,7 @@ class Game:
    
         # Create a player instance
         self.player = Player(self.lane_positions[1], self.lane_positions)
-        self.spawnMgr = SpawnManager(self.screen, self.lane_positions)
+        self.spawnMgr = SpawnManager(self.player, self.screen, self.quit,  self.lane_positions)
         
         # Clock to control frame rate
         self.clock = pygame.time.Clock()
