@@ -1,6 +1,6 @@
 import pygame
 import sys
-from playerclass import Player
+from player import Player
 
 class Game:
     def __init__(self):
