@@ -1,21 +1,27 @@
 import pygame
 import sys
 from player import Player
+from obstacle import Obstacle
 import settings
+from spawn_manager import SpawnManager
 
 class Game:
     def __init__(self):
         # Initialize Pygame
         pygame.init()
+
         # Set up the display
         self.screen = pygame.display.set_mode((settings.SCREEN_WIDTH, settings.SCREEN_HEIGHT))
         pygame.display.set_caption(settings.CAPTION)
         
         # Define lane positions
         self.lane_positions = settings.LANE_POSITIONS
-        
+
+        self.obstacle = Obstacle(120, self.screen, 1, self.lane_positions)
+   
         # Create a player instance
         self.player = Player(self.lane_positions[1], self.lane_positions)
+        self.spawnMgr = SpawnManager(self.screen, self.lane_positions)
         
         # Clock to control frame rate
         self.clock = pygame.time.Clock()
@@ -37,6 +43,7 @@ class Game:
     
     def update(self, dt):
         self.player.update(dt)
+        self.spawnMgr.update(dt)
     
     def draw(self):
 
@@ -44,6 +51,8 @@ class Game:
         
         # Draw the player
         self.player.draw(self.screen)
+        self.spawnMgr.draw()
+
         
         pygame.display.flip()
     
@@ -54,7 +63,8 @@ class Game:
             self.handle_events()
             self.update(dt)
             self.draw()
-        
+            self.obstacle.update()
+                    
         self.quit()
     
     def quit(self):
