@@ -1,32 +1,47 @@
 import pygame
 from obstacle import Obstacle
+from coin import Coin
 import random
+from player import Player
 
 class SpawnManager: 
-    def __init__(self, player, gameScreen, quitGame, lane_positions: list):
+    def __init__(self, player: Player, gameScreen, quitGame, lane_positions: list):
         self.gameScreen = gameScreen
         self.player = player
         self.lane_positions = lane_positions
         self.obstacles = []
         self.used_lanes = []
+        self.coins = []
+        self.collected_coins = 0  
         self.spawn_timer = 0
-        self.spawn_rate = 2
+        self.spawn_rate = 5
         self.speed = 2
+        self.coin_speed = 2
+        self.coin_spawn_timer = 0
+        self.coin_spawn_rate = 7
         self.quitGame = quitGame
 
-    def check_collisions(self, player):
-        for obstacle in self.obstacles:
-            if player.rect.colliderect(obstacle.rect):
-                print("collision detected, game over")
-                self.quitGame()
+    def check_collisions(self, source, objects):
+        for object in objects:
+            if source.rect.colliderect(object.rect):
+                if isinstance(object, Coin):
+                    self.coins.remove(object)
+                    self.collected_coins += 1
+                    print(f"Collected coins: {self.collected_coins}")
+                elif isinstance(object, Obstacle):
+                    if pygame.rect.Rect.contains(object.rect, source.rect):
+                        self.coins.remove(source)   
+                        continue
+                    if isinstance(source, Player):                      
+                        print("collision detected, game over")
+                        self.quitGame()
 
     def spawn_obstacles(self):
         count = random.randint(1, 2)
-        height = random.randint(50, 150)
+        height = random.randint(120, 420)
 
         for _ in range(count):
             lane = random.choice(self.lane_positions)
-            # get unique values of used lanes, use a lane thats not in the unique values
             unique_lanes = set(self.used_lanes)
             if len(unique_lanes) == 3:
                 return
@@ -36,24 +51,53 @@ class SpawnManager:
             self.used_lanes.append(lane)
             self.obstacles.append(Obstacle(height, self.gameScreen, self.speed, lane))
 
-       
+    def spawn_coins(self):
+        spawn_count = random.randint(5, 10)
+        current_lane_player = self.player.current_lane
+        roi = self.lane_positions.copy()
+        roi.pop(current_lane_player)        
+        y = -150
+
+        for i in range(1):
+            for _ in range(spawn_count):
+                coin = Coin(self.gameScreen, self.coin_speed, y, roi[i])
+                self.coins.append(coin)
+                y -= 30
+        
+    def remove_objects(self, objects):
+        for object in objects:
+            object.update()
+            if object.is_off_screen():
+                objects.remove(object)
+                if isinstance(object, Obstacle):
+                    self.used_lanes.remove(object.x)
 
     def update(self, dt):
-        self.check_collisions(self.player)
+        self.check_collisions(self.player, self.obstacles)
+        self.check_collisions(self.player, self.coins)
+        for coin in self.coins:
+            if len(self.obstacles) == 0:
+                break
+            self.check_collisions(coin, self.obstacles)
 
         self.spawn_timer += dt
+        self.coin_spawn_timer += dt
         if self.spawn_timer >= self.spawn_rate:
             self.spawn_timer = 0
             self.spawn_obstacles()
-        
-        for obstacle in self.obstacles[:]:  
-            obstacle.update()
-            if obstacle.is_off_screen():
-                self.obstacles.remove(obstacle)
-                self.used_lanes.remove(obstacle.x)
+            
+        if self.coin_spawn_timer >= self.coin_spawn_rate:
+            self.coin_spawn_timer = 0
+            self.spawn_coins()
+
+        self.remove_objects(self.obstacles)
+        self.remove_objects(self.coins)
 
     
     def draw(self):
         for obstacle in self.obstacles:
             obstacle.draw(self.gameScreen)
+        
+        for coin in self.coins:
+            coin.draw(self.gameScreen)
 

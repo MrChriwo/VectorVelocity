@@ -1,7 +1,6 @@
 import pygame
 import sys
 from player import Player
-from obstacle import Obstacle
 import settings
 from spawn_manager import SpawnManager
 
@@ -16,8 +15,6 @@ class Game:
         
         # Define lane positions
         self.lane_positions = settings.LANE_POSITIONS
-
-        self.obstacle = Obstacle(120, self.screen, 1, self.lane_positions)
    
         # Create a player instance
         self.player = Player(self.lane_positions[1], self.lane_positions)
@@ -46,24 +43,20 @@ class Game:
         self.spawnMgr.update(dt)
     
     def draw(self):
-
         self.screen.fill((255, 255, 255))
         
         # Draw the player
         self.player.draw(self.screen)
         self.spawnMgr.draw()
-
-        
+           
         pygame.display.flip()
     
     def run(self):
         while self.running:
             dt = self.clock.tick(settings.FRAME_RATE) / 1000.0 
-
             self.handle_events()
             self.update(dt)
             self.draw()
-            self.obstacle.update()
                     
         self.quit()
     
