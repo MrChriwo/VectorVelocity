@@ -53,14 +53,15 @@ class SpawnManager:
 
     def spawn_coins(self):
         spawn_count = random.randint(5, 10)
+        lane_count = random.randint(1, 2)
         current_lane_player = self.player.current_lane
         roi = self.lane_positions.copy()
         roi.pop(current_lane_player)        
         y = -150
 
-        for i in range(1):
-            for _ in range(spawn_count):
-                coin = Coin(self.gameScreen, self.coin_speed, y, roi[i])
+        for _ in range(lane_count):
+            for i in range(spawn_count):
+                coin = Coin(self.gameScreen, self.coin_speed, y, roi[_])
                 self.coins.append(coin)
                 y -= 30
         
