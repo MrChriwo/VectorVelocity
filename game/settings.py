@@ -3,8 +3,18 @@ SCREEN_WIDTH = 800
 SCREEN_HEIGHT = 600
 CAPTION = 'Vector Velocity - Pygame'
 
-# Lane Positions (left, middle, right)
-LANE_POSITIONS = [200, 400, 600]
 
-# Frame Rate
+# Level Area Settings
+__LEVEL_WIDTH_PERCENTAGE__ = 0.75
+__LEVEL_HEIGHT_PERCENTAGE__ = 1.0
+
+LEVEL_WIDTH = int(SCREEN_WIDTH * __LEVEL_WIDTH_PERCENTAGE__)
+LEVEL_HEIGHT = SCREEN_HEIGHT * 2
+LEVEL_X = (SCREEN_WIDTH - LEVEL_WIDTH) // 2
+LEVEL_Y = -LEVEL_HEIGHT / 2 
+
+# Lane Positions (left, middle, right) related to the level area
+
+LANE_POSITIONS = [LEVEL_X + 100, LEVEL_X + LEVEL_WIDTH // 2, LEVEL_X + LEVEL_WIDTH - 100]
+
 FRAME_RATE = 60

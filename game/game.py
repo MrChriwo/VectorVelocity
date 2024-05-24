@@ -8,7 +8,7 @@ class Game:
     def __init__(self):
         # Initialize Pygame
         pygame.init()
-
+        
         # Set up the display
         self.screen = pygame.display.set_mode((settings.SCREEN_WIDTH, settings.SCREEN_HEIGHT))
         pygame.display.set_caption(settings.CAPTION)
@@ -43,10 +43,8 @@ class Game:
         self.spawnMgr.update(dt)
     
     def draw(self):
-        self.screen.fill((255, 255, 255))
-        
-        # Draw the player
-        self.player.draw(self.screen)
+        self.screen.fill((0, 0, 0))
+
         self.spawnMgr.draw()
            
         pygame.display.flip()

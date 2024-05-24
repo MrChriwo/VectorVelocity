@@ -1,8 +1,9 @@
 import pygame
+import settings
 class Obstacle:
     def __init__(self, height, gameScreen, speed, lane):
         self.gameScreen = gameScreen
-        self.width, self.height = 150, height
+        self.width, self.height = settings.LEVEL_WIDTH / 8.4, height
         self.speed = speed
         self.y = -height + 20  # Start position just above the screen
         self.x = lane

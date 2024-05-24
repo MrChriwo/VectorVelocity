@@ -3,6 +3,8 @@ from obstacle import Obstacle
 from coin import Coin
 import random
 from player import Player
+from level_area import LevelArea
+import settings
 
 class SpawnManager: 
     def __init__(self, player: Player, gameScreen, quitGame, lane_positions: list):
@@ -19,7 +21,11 @@ class SpawnManager:
         self.coin_speed = 2
         self.coin_spawn_timer = 0
         self.coin_spawn_rate = 7
+        self.level = LevelArea(gameScreen)
         self.quitGame = quitGame
+
+    def spawn_level(self):
+        self.level.draw()
 
     def check_collisions(self, source, objects):
         for object in objects:
@@ -27,18 +33,17 @@ class SpawnManager:
                 if isinstance(object, Coin):
                     self.coins.remove(object)
                     self.collected_coins += 1
-                    print(f"Collected coins: {self.collected_coins}")
                 elif isinstance(object, Obstacle):
                     if pygame.rect.Rect.contains(object.rect, source.rect):
                         self.coins.remove(source)   
                         continue
                     if isinstance(source, Player):                      
-                        print("collision detected, game over")
+                        print(f"collision detected, game over. Collected coins: {self.collected_coins}")
                         self.quitGame()
 
     def spawn_obstacles(self):
         count = random.randint(1, 2)
-        height = random.randint(120, 420)
+        height = random.randint(120, settings.LEVEL_HEIGHT * 0.38)
 
         for _ in range(count):
             lane = random.choice(self.lane_positions)
@@ -74,6 +79,7 @@ class SpawnManager:
                     self.used_lanes.remove(object.x)
 
     def update(self, dt):
+        self.level.update(dt)
         self.check_collisions(self.player, self.obstacles)
         self.check_collisions(self.player, self.coins)
         for coin in self.coins:
@@ -96,9 +102,12 @@ class SpawnManager:
 
     
     def draw(self):
+        self.spawn_level()
+        self.player.draw(self.gameScreen)
         for obstacle in self.obstacles:
             obstacle.draw(self.gameScreen)
         
         for coin in self.coins:
             coin.draw(self.gameScreen)
+        
 
