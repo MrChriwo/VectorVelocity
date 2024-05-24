@@ -2,20 +2,23 @@ import pygame
 import sys
 from player import Player
 import settings
+from spawn_manager import SpawnManager
 
 class Game:
     def __init__(self):
         # Initialize Pygame
         pygame.init()
+        
         # Set up the display
         self.screen = pygame.display.set_mode((settings.SCREEN_WIDTH, settings.SCREEN_HEIGHT))
         pygame.display.set_caption(settings.CAPTION)
         
         # Define lane positions
         self.lane_positions = settings.LANE_POSITIONS
-        
+   
         # Create a player instance
         self.player = Player(self.lane_positions[1], self.lane_positions)
+        self.spawnMgr = SpawnManager(self.player, self.screen, self.quit,  self.lane_positions)
         
         # Clock to control frame rate
         self.clock = pygame.time.Clock()
@@ -37,24 +40,22 @@ class Game:
     
     def update(self, dt):
         self.player.update(dt)
+        self.spawnMgr.update(dt)
     
     def draw(self):
+        self.screen.fill((0, 0, 0))
 
-        self.screen.fill((255, 255, 255))
-        
-        # Draw the player
-        self.player.draw(self.screen)
-        
+        self.spawnMgr.draw()
+           
         pygame.display.flip()
     
     def run(self):
         while self.running:
             dt = self.clock.tick(settings.FRAME_RATE) / 1000.0 
-
             self.handle_events()
             self.update(dt)
             self.draw()
-        
+                    
         self.quit()
     
     def quit(self):
