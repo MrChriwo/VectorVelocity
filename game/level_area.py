@@ -11,7 +11,7 @@ class LevelArea:
         self.checkpoint = pygame.Rect(settings.LEVEL_X / 2, settings.LEVEL_Y / 2, 1, 1)
     
     def draw(self):
-        pygame.draw.rect(self.screen, (213, 23, 255), self.rect)
+        pygame.draw.rect(self.screen, (255, 235, 205), self.rect)
 
     def get_lane_position(self, lane):
         return self.lane_positions[lane]

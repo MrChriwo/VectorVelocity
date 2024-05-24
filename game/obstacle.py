@@ -16,7 +16,7 @@ class Obstacle:
         self.y += self.speed
 
     def draw(self, screen):
-        pygame.draw.rect(screen, (123, 255, 255), self.rect)
+        pygame.draw.rect(screen, (255, 0, 0), self.rect)
 
     def is_off_screen(self):
         return self.y > self.gameScreen.get_height()
