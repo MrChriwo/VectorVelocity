@@ -14,7 +14,6 @@ class SpawnManager:
         self.obstacles = []
         self.used_lanes = []
         self.coins = []
-        self.collected_coins = 0  
         self.spawn_timer = 0
         self.spawn_rate = 5
         self.speed = 2
@@ -27,18 +26,17 @@ class SpawnManager:
     def spawn_level(self):
         self.level.draw()
 
-    def check_collisions(self, source, objects):
+    def check_collisions(self, source, objects, updateCoins = False):
         for object in objects:
             if source.rect.colliderect(object.rect):
                 if isinstance(object, Coin):
                     self.coins.remove(object)
-                    self.collected_coins += 1
+                    if updateCoins: updateCoins(1)
                 elif isinstance(object, Obstacle):
                     if pygame.rect.Rect.contains(object.rect, source.rect):
                         self.coins.remove(source)   
                         continue
                     if isinstance(source, Player):                      
-                        print(f"collision detected, game over. Collected coins: {self.collected_coins}")
                         self.quitGame()
 
     def spawn_obstacles(self):
@@ -55,7 +53,7 @@ class SpawnManager:
 
             self.used_lanes.append(lane)
             self.obstacles.append(Obstacle(height, self.gameScreen, self.speed, lane))
-
+            
     def spawn_coins(self):
         spawn_count = random.randint(5, 10)
         lane_count = random.randint(1, 2)
@@ -80,8 +78,6 @@ class SpawnManager:
 
     def update(self, dt):
         self.level.update(dt)
-        self.check_collisions(self.player, self.obstacles)
-        self.check_collisions(self.player, self.coins)
         for coin in self.coins:
             if len(self.obstacles) == 0:
                 break

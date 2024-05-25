@@ -3,6 +3,8 @@ import sys
 from player import Player
 import settings
 from spawn_manager import SpawnManager
+from obstacle import Obstacle
+from coin import Coin 
 
 class Game:
     def __init__(self):
@@ -22,12 +24,24 @@ class Game:
         
         # Clock to control frame rate
         self.clock = pygame.time.Clock()
+
+        self.score = 0
+        self.collected_coins = 0
+        self.difficulty = 1
+        self.difficulty_timer = 0
         
         # Game state
         self.running = True
+
+    def updateCoins(self, amount):
+        self.collected_coins += amount
+        print(f"Collected coins: {self.collected_coins}")
+
+    def is_game_over(self):
+        if not self.running:
+            return True
     
     def handle_events(self):
-
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 self.running = False
@@ -40,17 +54,19 @@ class Game:
     
     def update(self, dt):
         self.player.update(dt)
+        self.spawnMgr.check_collisions(self.player, self.spawnMgr.coins, self.updateCoins)
+        self.spawnMgr.check_collisions(self.player, self.spawnMgr.obstacles)
         self.spawnMgr.update(dt)
     
     def draw(self):
         self.screen.fill((0, 0, 0))
 
         self.spawnMgr.draw()
-           
+   
         pygame.display.flip()
     
     def run(self):
-        while self.running:
+        while not self.is_game_over():
             dt = self.clock.tick(settings.FRAME_RATE) / 1000.0 
             self.handle_events()
             self.update(dt)
