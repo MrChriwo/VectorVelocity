@@ -15,18 +15,14 @@ class Obstacle:
     def rect(self):
         return pygame.Rect(self.x, self.y, self.width, self.height)
     
+    # loading random image from the obstacle asset path
     def load_random_image(self):
-        # Path to the folder containing obstacle images
-        obstacle_path = 'game/assets/obstacles/'
-        # List all files in the obstacle directory
-        images = [file for file in os.listdir(obstacle_path) if file.endswith(('.png', '.jpg', '.jpeg'))]
-        # Select a random image file
+        images = [file for file in os.listdir(settings.OBSTACLE_ASSET_PATH)]
         random_image_file = random.choice(images)
-        # Load and scale the image to fit the obstacle size
-        image = pygame.image.load(os.path.join(obstacle_path, random_image_file))
+        image = pygame.image.load(os.path.join(settings.OBSTACLE_ASSET_PATH, random_image_file))
         image = pygame.transform.scale(image, (int(self.width), int(self.height)))
         return image
-
+    
     def update(self):
         self.y += self.speed
 

@@ -1,8 +1,9 @@
 import pygame
+import settings
 
 class Player:
     def __init__(self, x, lane_positions):
-        self.image = pygame.image.load("game/assets/ship.png")
+        self.image = pygame.image.load(settings.PLAYER_ASSET_PATH)
         self.width = 50
         self.height = 50
         self.lane_positions = lane_positions

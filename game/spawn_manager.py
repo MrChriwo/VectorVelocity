@@ -29,11 +29,11 @@ class SpawnManager:
 
 
     def update_spawn_rates(self):
-        print("spawn rate: ", self.obstacle_spawn_rate)
-        if self.obstacle_spawn_rate >= 0.375:
-            self.obstacle_spawn_rate -= 0.125
-            self.coin_spawn_rate = (self.obstacle_spawn_rate + 2) * 1.125
-            print("spawn rate updated: ", self.obstacle_spawn_rate)
+        # print("spawn rate: ", self.obstacle_spawn_rate)
+        if self.obstacle_spawn_rate >= settings.MAINIMUM_OBSTACLE_SPAWN_RATE:
+            self.obstacle_spawn_rate -= settings.OBSTACLE_SPAWN_RATE_DECREASE
+            self.coin_spawn_rate = (self.obstacle_spawn_rate + 2) * settings.COIN_SPAWN_RATE_MULTIPLIER
+            # print("spawn rate updated: ", self.obstacle_spawn_rate)
 
 
     def get_available_lane(self):
@@ -66,7 +66,7 @@ class SpawnManager:
 
             
     def spawn_obstacles(self):
-        count = random.randint(1, 7)
+        count = random.randint(1, settings.MAXIMUM_OBSTACLE_SPAWN_COUNT)
         spawned = []
         y_offset = -100
         lane = self.get_available_lane()
@@ -80,7 +80,7 @@ class SpawnManager:
                 return
             obstacle = Obstacle(self.gameScreen, self.speed, lane, y_offset, x_offset)
 
-            y_offset -= 95
+            y_offset -= settings.OBSTACLE_Y_OFFSET_DECREASE
             spawned.append(obstacle)
             self.obstacles.append(obstacle)
             self.used_lanes.append(lane + x_offset)
