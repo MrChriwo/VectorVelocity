@@ -7,6 +7,7 @@ from level_area import LevelArea
 import settings
 
 class SpawnManager: 
+
     def __init__(self, player: Player, gameScreen, quitGame, lane_positions: list, speed):
         self.gameScreen = gameScreen
         self.player = player
@@ -22,8 +23,10 @@ class SpawnManager:
         self.level = LevelArea(gameScreen)
         self.quitGame = quitGame
 
+
     def spawn_level(self):
         self.level.draw()
+
 
     def update_spawn_rates(self):
         print("spawn rate: ", self.obstacle_spawn_rate)
@@ -32,11 +35,13 @@ class SpawnManager:
             self.coin_spawn_rate = (self.obstacle_spawn_rate + 2) * 1.125
             print("spawn rate updated: ", self.obstacle_spawn_rate)
 
+
     def get_available_lane(self):
         available_lanes = [lane for lane in self.lane_positions if lane not in self.used_lanes]
         if not available_lanes:
             return None
         return random.choice(available_lanes)
+
 
     def update_speed(self, speed):
         self.speed = speed
@@ -44,6 +49,7 @@ class SpawnManager:
             obstacle.speed = speed
         for coin in self.coins:
             coin.speed = speed
+
 
     def check_collisions(self, source, objects, updateCoins = False):
         for object in objects:
@@ -73,21 +79,13 @@ class SpawnManager:
             if lane is None:
                 return
             obstacle = Obstacle(self.gameScreen, self.speed, lane, y_offset, x_offset)
-            # if x_offset >= self.lane_positions.index(lane) + 1 or x_offset <= self.lane_positions.index(lane) - 1:
-            #     x_offset = 0
+
             y_offset -= 95
             spawned.append(obstacle)
             self.obstacles.append(obstacle)
             self.used_lanes.append(lane + x_offset)
 
-        # for _ in range(count):
-        #     unique_lanes = set(self.used_lanes)
-        #     if len(unique_lanes) == 3:
-        #         return
-        #     lane = self.get_available_lane()    
-        #     self.used_lanes.append(lane)
-        #     self.obstacles.append(Obstacle(height, self.gameScreen, self.speed, lane))
-            
+
     def spawn_coins(self):
         spawn_count = random.randint(5, 10)
         lane_count = random.randint(1, 2)
@@ -101,7 +99,8 @@ class SpawnManager:
                 coin = Coin(self.gameScreen, self.speed, y, roi[_])
                 self.coins.append(coin)
                 y -= 30
-        
+
+
     def remove_objects(self, objects):
         for object in objects:
             object.update()
@@ -109,6 +108,7 @@ class SpawnManager:
                 objects.remove(object)
                 if isinstance(object, Obstacle):
                     self.used_lanes.remove(object.x)
+
 
     def update(self, dt):
         for coin in self.coins:
@@ -131,7 +131,6 @@ class SpawnManager:
         self.remove_objects(self.coins)
 
 
-    
     def draw(self):
         self.spawn_level()
         self.player.draw(self.gameScreen)
