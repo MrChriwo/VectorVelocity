@@ -75,7 +75,7 @@ class Game:
     def handle_events(self):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                self.ui.show_gameover_screen(int(self.score), self.collected_coins)
+                self.running = False
 
         keys = pygame.key.get_pressed()
         if keys[pygame.K_LEFT]:
