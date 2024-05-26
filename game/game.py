@@ -113,6 +113,7 @@ class Game:
 
     # exit the application 
     def quit(self):
+        print(f"Game Over Space Cadet!\nYour score was: {int(self.score)}\nCollect coins: {self.collected_coins}\nSpeed: {self.speed}\nSpawn rate: {self.spawnMgr.obstacle_spawn_rate}")
         pygame.quit()
         sys.exit()
 
