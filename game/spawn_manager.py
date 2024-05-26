@@ -98,7 +98,7 @@ class SpawnManager:
             for i in range(spawn_count):
                 coin = Coin(self.gameScreen, self.speed, y, roi[_])
                 self.coins.append(coin)
-                y -= 30
+                y -= settings.COIN_Y_OFFSET_DECREASE
 
 
     def remove_objects(self, objects):
