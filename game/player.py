@@ -2,6 +2,7 @@ import pygame
 
 class Player:
     def __init__(self, x, lane_positions):
+        self.image = pygame.image.load("game/assets/ship.png")
         self.width = 50
         self.height = 50
         self.lane_positions = lane_positions
@@ -9,11 +10,11 @@ class Player:
         self.current_lane = 1
         self.x = x
         self.y = 500
-        self.speed = 730
+        self.speed = 1350
 
     @property
     def rect(self):
-        return pygame.Rect(self.x, self.y, self.width, self.height)
+        return self.image.get_rect(topleft=(self.x, self.y))
 
     def update(self, dt):
         target_x = self.lane_positions[self.target_lane]
@@ -36,4 +37,4 @@ class Player:
             self.target_lane = self.current_lane + 1
 
     def draw(self, screen):
-        pygame.draw.rect(screen, (0, 0, 255), self.rect)
+        screen.blit(self.image, (self.x, self.y))
