@@ -72,9 +72,6 @@ class SpawnManager:
         lane = self.get_available_lane()
 
         for _ in range(count):    
-            unique_lanes = set(self.used_lanes)
-            if len(unique_lanes) == 3:
-                return
             x_offset = random.randint(-82, 83)
             if lane is None:
                 return
