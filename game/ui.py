@@ -1,4 +1,5 @@
 import pygame
+import settings
 
 class UI:
     def __init__(self, screen):
@@ -13,3 +14,9 @@ class UI:
     def show_highscore(self, coins):
         text = self.font.render(f'High Score: {coins}', True, (184, 0, 184))
         self.screen.blit(text, (10, 50))
+
+    def show_credits(self):
+        # show Background:  vecteezy.com small in right bottom corner 
+        text = pygame.font.SysFont(None, 18)
+        text = text.render("Background: vecteezy.com", True, (118, 0, 118))
+        self.screen.blit(text, (settings.SCREEN_WIDTH - 170, settings.SCREEN_HEIGHT - 30))        

@@ -1,3 +1,7 @@
+# This project uses vector graphics designed by Vecteezy
+# Vecteezy assets are used under the Free License and require attribution
+# For more information, visit https://www.vecteezy.com
+
 import pygame
 import sys
 from player import Player
@@ -98,6 +102,7 @@ class Game:
         self.spawnMgr.draw()
         self.ui.show_coins(self.collected_coins)
         self.ui.show_highscore(int(self.score))
+        self.ui.show_credits()
 
     # main game loop
     def run(self):
