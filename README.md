@@ -1,5 +1,9 @@
 # VectorVelocity
 
+<div align="center">
+    <img src="https://github.com/MrChriwo/VectorVelocity/assets/96289753/66ee0ba9-0f26-4e11-b93d-6bcb097525b4" alt="VectorVelocity" width="65%">
+</div>
+
 
 # Table of Contents
 
@@ -9,7 +13,7 @@
 - [🤖 Problem Domain for RL Agent](#problem-domain)
 
 
-# Intriduction 
+# Introduction 
 
 VectorVelocity is a challenging and engaging space-themed game created using Pygame, where a spaceship navigates through lanes, collecting coins and dodging descending asteroids. This project not only offers entertainment but also serves as a problem domain for a Reinforcement Learning (RL) agent. The core of this project is the development of an RL agent that learns to master the game, implemented in an OpenAI Gym environment tailored specifically for this game.
 
