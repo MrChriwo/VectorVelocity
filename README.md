@@ -26,7 +26,7 @@ In VectorVelocity, the player controls a spaceship moving across three lanes. Th
 This game was enriched significantly by incorporating various third-party assets. We are immensely grateful to the creators of these assets for making their work available and enhancing the gaming experience.
 
 1. **Game Background**: The thematic space background, enhancing the visual appeal of our game, was sourced from [Vecteezy](https://www.vecteezy.com).
-2. **Space Ship**: The spaceship, which players navigate through asteroids, was created by FoozleCC as part of the Void Pack. Explore more of FoozleCC's creations on their [Patreon](https://www.patreon.com/bePatron?u=48464594).
+2. **Space Ship**: The spaceship, which players navigate through asteroids, was created by FoozleCC as part of the Void Pack. Explore more of FoozleCC's creations [here](https://www.youtube.com/@FoozleCC/videos).
 3. **Background Music**: The atmospheric tunes from Goose Ninjas' Space Music Pack set the perfect mood for our adventures through space. Check out more of Goose Ninjas' music on their [Itch.io page](https://gooseninja.itch.io/).
 
 We extend a huge thanks to the mentioned authors for making their work freely available.
