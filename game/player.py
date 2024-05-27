@@ -4,8 +4,6 @@ import settings
 class Player:
     def __init__(self, x, lane_positions):
         self.image = pygame.image.load(settings.PLAYER_ASSET_PATH)
-        self.width = 50
-        self.height = 50
         self.lane_positions = lane_positions
         self.target_lane = 1
         self.current_lane = 1
@@ -39,3 +37,6 @@ class Player:
 
     def draw(self, screen):
         screen.blit(self.image, (self.x, self.y))
+    
+    def get_current_positon(self):
+        return self.current_lane
