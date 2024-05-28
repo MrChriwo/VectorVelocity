@@ -26,7 +26,7 @@ In VectorVelocity, the player controls a spaceship moving across three lanes. Th
 This game was enriched significantly by incorporating various third-party assets. We are immensely grateful to the creators of these assets for making their work available and enhancing the gaming experience.
 
 1. **Game Background**: The thematic space background, enhancing the visual appeal of our game, was sourced from [Vecteezy](https://www.vecteezy.com).
-2. **Space Ship**: The spaceship, which players navigate through asteroids, was created by FoozleCC as part of the Void Pack. Explore more of FoozleCC's creations on their [Patreon](https://www.patreon.com/bePatron?u=48464594).
+2. **Space Ship**: The spaceship, which players navigate through asteroids, was created by FoozleCC as part of the Void Pack. Explore more of FoozleCC's creations [here](https://www.youtube.com/@FoozleCC/videos).
 3. **Background Music**: The atmospheric tunes from Goose Ninjas' Space Music Pack set the perfect mood for our adventures through space. Check out more of Goose Ninjas' music on their [Itch.io page](https://gooseninja.itch.io/).
 
 We extend a huge thanks to the mentioned authors for making their work freely available.
@@ -34,6 +34,7 @@ We extend a huge thanks to the mentioned authors for making their work freely av
 
 # Problem Domain
 
-The challenge for the RL agent is to learn the optimal strategies for maximizing the score by collecting coins and avoiding asteroids. The agent needs to make decisions in real-time, adjusting to the increasing speed of the game and the randomness of asteroid placement. This problem domain provides a rich environment for exploring and refining reinforcement learning techniques.
+The challenge for the RL agent in VectorVelocity is to learn optimal strategies for maximizing the score by skillfully collecting coins while avoiding asteroids. The agent is required to make decisions in real-time, adjusting to the game's increasing speed and the randomness of asteroid placements. Additionally, some coins spawn between asteroids in positions that may not always be reachable, adding a layer of decision-making complexity. This requires the player, and consequently the RL agent, to assess whether pursuing a coin is worth the risk of potential collision. This problem domain provides a rich and challenging environment for exploring and refining reinforcement learning techniques.
+
 
 detailed description about the agent coming soon. 
