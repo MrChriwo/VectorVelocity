@@ -62,7 +62,7 @@ class Game:
             return
         if self.last_updated_coins == self.collected_coins and self.collected_coins != 0:
             return
-        if (self.collected_coins % settings.COIN_SPEEDUP_FACTOR == 0 and self.collected_coins != 0) or (int(self.score) % settings.SCORE_SPEEDUP_FACTOR == 0 and self.score != 0):          
+        if (self.collected_coins % settings.COIN_SPEEDUP_FACTOR == 0 and self.collected_coins != 0) or (int(self.score) % int(settings.SCORE_SPEEDUP_FACTOR * 1 + amount) == 0 and self.score != 0):          
             self.speed += amount
             self.spawnMgr.update_speed(self.speed)
             # print(f"Speed: {self.speed}")

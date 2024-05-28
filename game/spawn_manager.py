@@ -80,7 +80,7 @@ class SpawnManager:
             y_offset -= settings.OBSTACLE_Y_OFFSET_DECREASE
             spawned.append(obstacle)
             self.obstacles.append(obstacle)
-            self.used_lanes.append(lane + x_offset)
+            self.used_lanes.append(lane)
 
 
     def spawn_coins(self):
@@ -104,7 +104,7 @@ class SpawnManager:
             if object.is_off_screen():
                 objects.remove(object)
                 if isinstance(object, Obstacle):
-                    self.used_lanes.remove(object.x)
+                    self.used_lanes.pop()
 
 
     def update(self, dt):
