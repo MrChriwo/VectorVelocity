@@ -67,6 +67,7 @@ class Game:
             self.spawnMgr.update_speed(self.speed)
             # print(f"Speed: {self.speed}")
             self.spawnMgr.update_spawn_rates()
+            self.player.update_speed(amount)
 
             self.last_updated_coins = self.collected_coins
         

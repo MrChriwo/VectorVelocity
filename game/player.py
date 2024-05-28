@@ -40,3 +40,6 @@ class Player:
     
     def get_current_positon(self):
         return self.current_lane
+    
+    def update_speed(self, speed):
+        self.speed += speed
