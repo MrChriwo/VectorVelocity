@@ -1,9 +1,10 @@
 import pygame
 import settings
+from asset_manager import AssetManager
 
 class Player:
-    def __init__(self, x, lane_positions):
-        self.image = pygame.image.load(settings.PLAYER_ASSET_PATH)
+    def __init__(self, x, lane_positions, assetMgr: AssetManager):
+        self.image = assetMgr.get_asset("player")
         self.lane_positions = lane_positions
         self.target_lane = 1
         self.current_lane = 1

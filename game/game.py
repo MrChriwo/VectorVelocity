@@ -8,24 +8,24 @@ from player import Player
 import settings
 from spawn_manager import SpawnManager
 from ui import UI
+from asset_manager import AssetManager
 
 class Game:
     def __init__(self):
         # Initialize Pygame with backround image variables
         pygame.init()
-        self.background = pygame.image.load(settings.BACKGROUND_ASSET_PATH)
-        self.background = pygame.transform.scale(self.background, (settings.SCREEN_WIDTH, settings.SCREEN_HEIGHT))
-
-        # Sound mixer initialization
-        pygame.mixer.init()
-        pygame.mixer.music.load(settings.SOUNDS_ASSET_PATH + "bgmusic.wav")
-        pygame.mixer.music.set_volume(0.2) 
-        pygame.mixer.music.play(-1) 
-
+        
         # Set up the display
         self.screen = pygame.display.set_mode((settings.SCREEN_WIDTH, settings.SCREEN_HEIGHT))
         pygame.display.set_caption(settings.CAPTION)
-        
+
+        self.assetMgr = AssetManager()
+        self.background = self.assetMgr.get_asset('background')
+
+        # Sound mixer initialization
+        pygame.mixer.init()
+        self.assetMgr.get_asset('bgmusic').play(-1)
+
         # Create UI instance
         self.ui = UI(self.screen)
 
@@ -38,8 +38,8 @@ class Game:
         self.lane_positions = settings.LANE_POSITIONS
    
         #  Instances for game mechanics
-        self.player = Player(self.lane_positions[1], self.lane_positions)
-        self.spawnMgr = SpawnManager(self.player, self.screen, self.quit,  self.lane_positions, self.speed)
+        self.player = Player(self.lane_positions[1], self.lane_positions, self.assetMgr)
+        self.spawnMgr = SpawnManager(self.player, self.screen, self.quit,  self.lane_positions, self.speed, self.assetMgr)
         
         # Clock to control frame rate
         self.clock = pygame.time.Clock()
@@ -94,16 +94,16 @@ class Game:
         self.spawnMgr.check_collisions(self.player, self.spawnMgr.coins, self.updateCoins)
         self.spawnMgr.check_collisions(self.player, self.spawnMgr.obstacles)
         self.spawnMgr.update(dt)
-        self.updateDifficulty(0.375)
 
     # draw all the game objects
     def draw(self):
         self.screen.blit(self.background, (0, 0))
-
         self.spawnMgr.draw()
         self.ui.show_coins(self.collected_coins)
         self.ui.show_highscore(int(self.score))
         self.ui.show_credits()
+        self.updateDifficulty(0.375)
+
 
     # main game loop
     def run(self):

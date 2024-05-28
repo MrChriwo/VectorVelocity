@@ -5,10 +5,11 @@ import random
 from player import Player
 from level_area import LevelArea
 import settings
+from asset_manager import AssetManager
 
 class SpawnManager: 
 
-    def __init__(self, player: Player, gameScreen, quitGame, lane_positions: list, speed):
+    def __init__(self, player: Player, gameScreen, quitGame, lane_positions: list, speed, assetMgr: AssetManager):
         self.gameScreen = gameScreen
         self.player = player
         self.lane_positions = lane_positions
@@ -22,6 +23,7 @@ class SpawnManager:
         self.coin_spawn_rate = self.obstacle_spawn_rate +2
         self.level = LevelArea(gameScreen)
         self.quitGame = quitGame
+        self.assetMgr = assetMgr
 
 
     def spawn_level(self):
@@ -75,7 +77,7 @@ class SpawnManager:
             x_offset = random.randint(-82, 83)
             if lane is None:
                 return
-            obstacle = Obstacle(self.gameScreen, self.speed, lane, y_offset, x_offset)
+            obstacle = Obstacle(self.gameScreen, self.speed, lane, y_offset, x_offset, self.assetMgr)
 
             y_offset -= settings.OBSTACLE_Y_OFFSET_DECREASE
             spawned.append(obstacle)

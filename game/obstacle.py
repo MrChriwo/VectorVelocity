@@ -2,8 +2,10 @@ import pygame
 import settings
 import os
 import random
+from asset_manager import AssetManager
 class Obstacle:
-    def __init__(self, gameScreen, speed, lane, y, x_offset):
+    def __init__(self, gameScreen, speed, lane, y, x_offset, assetMgr: AssetManager):
+        self.assetMgr = assetMgr
         self.gameScreen = gameScreen
         self.width, self.height = 90, 90
         self.speed = speed
@@ -15,11 +17,10 @@ class Obstacle:
     def rect(self):
         return pygame.Rect(self.x, self.y, self.width, self.height)
     
-    # loading random image from the obstacle asset path
+    # loading random image from the asset manager
     def load_random_image(self):
-        images = [file for file in os.listdir(settings.OBSTACLE_ASSET_PATH)]
-        random_image_file = random.choice(images)
-        image = pygame.image.load(os.path.join(settings.OBSTACLE_ASSET_PATH, random_image_file))
+        images = self.assetMgr.get_asset("obstacles")
+        image = random.choice(images)
         image = pygame.transform.scale(image, (int(self.width), int(self.height)))
         return image
     
