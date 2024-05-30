@@ -31,8 +31,10 @@ class Game:
 
         # Game variables
         self.score = 0
+        self.score_increase_multiplier = 1
+
         self.collected_coins = 0
-        self.speed = 3.5
+        self.speed = 4
         self.last_updated_coins = 0
         
         self.lane_positions = settings.LANE_POSITIONS
@@ -60,9 +62,10 @@ class Game:
     def updateDifficulty(self, amount):
         if self.speed == settings.MAXIMUM_SPEED:
             return
-        if self.last_updated_coins == self.collected_coins and self.collected_coins != 0:
+        if self.last_updated_coins == self.collected_coins:
             return
-        if (self.collected_coins % settings.COIN_SPEEDUP_FACTOR == 0 and self.collected_coins != 0) or (int(self.score) % int(settings.SCORE_SPEEDUP_FACTOR * 1 + amount) == 0 and self.score != 0):          
+        score_condition = self.score * self.score_increase_multiplier
+        if (self.collected_coins % settings.COIN_SPEEDUP_FACTOR == 0 and self.collected_coins != 0) or ((int(self.score)) % score_condition == 0 and self.score != 0):          
             self.speed += amount
             self.spawnMgr.update_speed(self.speed)
             # print(f"Speed: {self.speed}")
@@ -70,6 +73,7 @@ class Game:
             self.player.update_speed(amount)
 
             self.last_updated_coins = self.collected_coins
+            self.score_increase_multiplier += amount
         
     # checking game over condition
     def is_game_over(self):
@@ -81,6 +85,9 @@ class Game:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 self.running = False
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_r: 
+                    self.restart()
 
         keys = pygame.key.get_pressed()
         if keys[pygame.K_LEFT]:
@@ -94,6 +101,8 @@ class Game:
         self.spawnMgr.check_collisions(self.player, self.spawnMgr.coins, self.updateCoins)
         self.spawnMgr.check_collisions(self.player, self.spawnMgr.obstacles)
         self.spawnMgr.update(dt)
+        self.updateDifficulty(settings.DIFFICULTY_INCREASE_FACTOR)
+
 
     # draw all the game objects
     def draw(self):
@@ -102,7 +111,6 @@ class Game:
         self.ui.show_coins(self.collected_coins)
         self.ui.show_highscore(int(self.score))
         self.ui.show_credits()
-        self.updateDifficulty(0.375)
 
 
     # main game loop
@@ -117,11 +125,22 @@ class Game:
             pygame.display.flip()
 
 
-    # exit the application 
     def quit(self):
         print(f"Game Over Space Cadet!\nYour score was: {int(self.score)}\nCollect coins: {self.collected_coins}\nSpeed: {self.speed}\nSpawn rate: {self.spawnMgr.obstacle_spawn_rate}")
         pygame.quit()
         sys.exit()
+
+    def restart(self):
+        self.score = 0
+        self.collected_coins = 0
+        self.speed = 4
+        self.last_updated_coins = 0
+        self.score_increase_multiplier = 1
+
+        self.player = Player(self.lane_positions[1], self.lane_positions, self.assetMgr)
+        self.spawnMgr = SpawnManager(self.player, self.screen, self.quit, self.lane_positions, self.speed, self.assetMgr)
+
+        self.running = True
 
 if __name__ == "__main__":
     game = Game()
