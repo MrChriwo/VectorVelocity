@@ -1,19 +1,20 @@
 import pygame
+import settings
+from asset_manager import AssetManager
 
 class Player:
-    def __init__(self, x, lane_positions):
-        self.width = 50
-        self.height = 50
+    def __init__(self, x, lane_positions, assetMgr: AssetManager):
+        self.image = assetMgr.get_asset("player")
         self.lane_positions = lane_positions
         self.target_lane = 1
         self.current_lane = 1
         self.x = x
         self.y = 500
-        self.speed = 730
+        self.speed = 1350
 
     @property
     def rect(self):
-        return pygame.Rect(self.x, self.y, self.width, self.height)
+        return self.image.get_rect(topleft=(self.x, self.y))
 
     def update(self, dt):
         target_x = self.lane_positions[self.target_lane]
@@ -36,4 +37,10 @@ class Player:
             self.target_lane = self.current_lane + 1
 
     def draw(self, screen):
-        pygame.draw.rect(screen, (0, 0, 255), self.rect)
+        screen.blit(self.image, (self.x, self.y))
+    
+    def get_current_positon(self):
+        return settings.LANE_POSITIONS[self.current_lane]
+    
+    def update_speed(self, speed):
+        self.speed += speed

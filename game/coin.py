@@ -24,6 +24,6 @@ class Coin:
         return self.y > self.gameScreen.get_height()
         
     def draw(self, gameScreen):
-            pygame.draw.rect(gameScreen, (0, 255, 0), self.rect)
+        pygame.draw.circle(gameScreen, (235, 175, 4), (self.x, self.y), 8) 
 
 
