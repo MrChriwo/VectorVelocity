@@ -1,3 +1,9 @@
+import sys
+import os
+# path of current working directory
+cwd = os.path.dirname(os.path.realpath(__file__))
+sys.path.append(cwd)
+
 import gymnasium as gym
 from env import VVEnv 
 
