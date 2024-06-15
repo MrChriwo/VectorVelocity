@@ -4,14 +4,11 @@ from obstacle import Obstacle
 
 class Coin: 
     def __init__(self, gameScreen, speed, y,  lane):
-        # self.image = pygame.image.load("assets/coin.png")
-        # self.image = pygame.transform.scale(self.image, (50, 50))
         self.x = lane
         self.y = y
         self.speed = speed
         self.gameScreen = gameScreen
-        # self.rect = self.image.get_rect()
-        # self.rect.topleft = (self.x, self.y)
+
 
     @property
     def rect(self):

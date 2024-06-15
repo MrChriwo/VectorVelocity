@@ -1,6 +1,6 @@
 import sys
 import os
-# path of current working directory
+
 cwd = os.path.dirname(os.path.realpath(__file__))
 sys.path.append(cwd)
 

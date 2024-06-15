@@ -16,7 +16,6 @@ class UI:
         self.screen.blit(text, (10, 50))
 
     def show_credits(self):
-        # show Background:  vecteezy.com small in right bottom corner 
         text = pygame.font.SysFont(None, 18)
         text = text.render("Background: vecteezy.com", True, (118, 0, 118))
         self.screen.blit(text, (settings.SCREEN_WIDTH - 170, settings.SCREEN_HEIGHT - 30))
