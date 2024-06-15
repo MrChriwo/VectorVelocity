@@ -2,3 +2,4 @@ numpy>=1.26.4
 pandas>=2.2.2
 plotly>=5.22.0
 pygame>=2.5.2
+stable-baselines3 >= 2.3.2
