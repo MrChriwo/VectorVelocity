@@ -16,19 +16,18 @@ class Game:
         pygame.init()
         
         # Set up the display
-        
         if self.mode == 'human':
             self.screen = pygame.display.set_mode((settings.SCREEN_WIDTH, settings.SCREEN_HEIGHT))
             pygame.display.set_caption(settings.CAPTION)        
         else:    
             self.screen = pygame.Surface((settings.SCREEN_WIDTH, settings.SCREEN_HEIGHT))
 
+        # Load assets
         self.assetMgr = AssetManager()
         self.background = self.assetMgr.get_asset('background')
 
-        # Sound mixer initialization
-        pygame.mixer.init()
-        self.assetMgr.get_asset('bgmusic').play(-1)
+        if self.assetMgr.is_audio_available:
+            self.assetMgr.get_asset('bgmusic').play(-1)
 
         # Create UI instance
         self.ui = UI(self.screen)
