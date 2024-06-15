@@ -1,9 +1,36 @@
-FROM tensorflow/tensorflow:2.16.1-gpu-jupyter
+FROM pytorch/pytorch:2.3.1-cuda12.1-cudnn8-runtime
 
-COPY . .
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    libglib2.0-0 \
+    libsm6 \
+    libxext6 \
+    libxrender-dev \
+    libgl1-mesa-dev \
+    build-essential \
+    python3-pip \
+    python3-dev \
+    cmake \
+    libopenmpi-dev \
+    zlib1g-dev \
+    && rm -rf /var/index/lib/apt/lists/*
 
-RUN pip install --no-cache-dir -r requirements.txt
+COPY requirements.txt /workspace/requirements.txt
+
+RUN pip install --no-cache-dir -r /workspace/requirements.txt
+
+COPY . /workspace
+
+RUN pip install jupyter
+
+RUN apt-get purge -y \
+    build-essential \
+    cmake \
+    libopenmpi-dev \
+    zlib1g-dev \
+    && apt-get autoremove -y \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
+CMD ["jupyter", "notebook", "--ip='0.0.0.0'", "--port=8888", "--no-browser", "--allow-root", "--NotebookApp.token=''", "--Notebookup.password=''"]
 
 EXPOSE 8888
-
-CMD ["jupyter", "notebook", "--ip=0.0.0.0", "--port=8888", "--no-browser", "--allow-root", "--NotebookApp.token=''", "--NotebookApp.password=''"]
