@@ -9,7 +9,7 @@ from asset_manager import AssetManager
 
 class SpawnManager: 
 
-    def __init__(self, player: Player, gameScreen, quitGame, lane_positions: list, speed, assetMgr: AssetManager):
+    def __init__(self, player: Player, gameScreen, setGameOver, lane_positions: list, speed, assetMgr: AssetManager):
         self.gameScreen = gameScreen
         self.player = player
         self.lane_positions = lane_positions
@@ -22,7 +22,7 @@ class SpawnManager:
         self.speed = speed
         self.coin_spawn_rate = self.obstacle_spawn_rate +2
         self.level = LevelArea(gameScreen)
-        self.quitGame = quitGame
+        self.set_game_over = setGameOver
         self.assetMgr = assetMgr
 
 
@@ -63,8 +63,8 @@ class SpawnManager:
                     if pygame.rect.Rect.contains(object.rect, source.rect):
                         self.coins.remove(source)   
                         continue
-                    if isinstance(source, Player):                      
-                        self.quitGame()
+                    if isinstance(source, Player):   
+                        self.set_game_over()              
 
             
     def spawn_obstacles(self):

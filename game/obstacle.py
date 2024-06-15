@@ -1,6 +1,4 @@
 import pygame
-import settings
-import os
 import random
 from asset_manager import AssetManager
 class Obstacle:
