@@ -6,7 +6,7 @@ import time
 class TestVVEnv(unittest.TestCase):
 
     def setUp(self):
-        self.env = VVEnv(mode='human')
+        self.env = VVEnv(mode='agent')
         self.env.reset()
 
     def test_initialization(self):
@@ -20,7 +20,7 @@ class TestVVEnv(unittest.TestCase):
         self.check_observation(observation)
 
     def test_step(self):
-        for _ in range(10):
+        for _ in range(50000):
             print("starting epoch", _ +1)
             done = False
             self.env.reset()

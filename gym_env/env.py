@@ -9,6 +9,7 @@ import gymnasium as gym
 from gymnasium import spaces
 import numpy as np
 
+
 class VVEnv(gym.Env):
     metadata = {'render.modes': ['human'], 'render_fps': FRAME_RATE}
 
@@ -18,7 +19,7 @@ class VVEnv(gym.Env):
         self.game = Game(self.mode)
         
         self.observation_space = spaces.Dict({
-            "player_pos": spaces.Discrete(LANE_POSITIONS[-1]),
+            "player_pos": spaces.Discrete(LANE_POSITIONS[-1] +1 ),
             "obstacles": spaces.Box(
                 low=np.full((9, 2), [-454, -1], dtype=np.int32),
                 high=np.full((9, 2), [SCREEN_HEIGHT + 120, LANE_POSITIONS[-1] + 90], dtype=np.int32),
@@ -44,7 +45,7 @@ class VVEnv(gym.Env):
         self.dodged_obstacles = []
         self.missed_coins = []
         self.latest_speed = self.game.speed
-        return self._get_observation(), {}
+        return self._get_observation()
 
     def step(self, action):
         if action == 0: # Do nothing
@@ -54,7 +55,6 @@ class VVEnv(gym.Env):
         elif action == 2: # move left
             self.game.player.move_left()
 
-        print(f"{20* '='}\nSPEED: {self.game.speed}\nCOINS: {self.game.collected_coins}\nSCORE: {self.game.score}\n{20* '='}")
 
 
         self.game.update(self.game.clock.tick(FRAME_RATE) / 1000.0)
@@ -67,6 +67,7 @@ class VVEnv(gym.Env):
         return observation, reward, done, truncated, {}
 
     def _get_observation(self):
+
         max_obstacles = 9
         max_coins = 40
         obstacles = np.full((max_obstacles, 2), -1, dtype=np.int32)
