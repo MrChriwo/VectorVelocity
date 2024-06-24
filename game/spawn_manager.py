@@ -24,6 +24,8 @@ class SpawnManager:
         self.level = LevelArea(gameScreen)
         self.set_game_over = setGameOver
         self.assetMgr = assetMgr
+        self.next_obstacle_id = 0
+        self.next_coin_id = 0
 
 
     def spawn_level(self):
@@ -77,11 +79,13 @@ class SpawnManager:
             x_offset = random.randint(-82, 83)
             if lane is None:
                 return
-            obstacle = Obstacle(self.gameScreen, self.speed, lane, y_offset, x_offset, self.assetMgr)
+            obstacle_id = self.next_obstacle_id
+            obstacle = Obstacle(self.gameScreen, self.speed, lane, y_offset, x_offset, self.assetMgr, obstacle_id)
 
             y_offset -= settings.OBSTACLE_Y_OFFSET_DECREASE
             spawned.append(obstacle)
             self.obstacles.append(obstacle)
+            self.next_obstacle_id += 1
             self.used_lanes.append(lane)
 
 
@@ -95,8 +99,10 @@ class SpawnManager:
 
         for _ in range(lane_count):
             for i in range(spawn_count):
-                coin = Coin(self.gameScreen, self.speed, y, roi[_])
+                coin_id = self.next_coin_id
+                coin = Coin(self.gameScreen, self.speed, y, roi[_], coin_id)
                 self.coins.append(coin)
+                self.next_coin_id += 1
                 y -= settings.COIN_Y_OFFSET_DECREASE
 
 
