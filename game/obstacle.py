@@ -1,15 +1,18 @@
 import pygame
 import random
 from asset_manager import AssetManager
+from settings import LANE_POSITIONS
 class Obstacle:
-    def __init__(self, gameScreen, speed, lane, y, x_offset, assetMgr: AssetManager):
+    def __init__(self, gameScreen, speed, lane_x, y, x_offset, assetMgr: AssetManager, id: int):
         self.assetMgr = assetMgr
         self.gameScreen = gameScreen
         self.width, self.height = 90, 90
         self.speed = speed
         self.y = y
-        self.x = lane + x_offset
+        self.x = lane_x + x_offset
+        self.lane = LANE_POSITIONS.index(lane_x)
         self.image = self.load_random_image()
+        self.id = id
 
     @property
     def rect(self):
