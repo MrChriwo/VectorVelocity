@@ -45,7 +45,7 @@ class VVEnv(gym.Env):
         self.dodged_obstacles = []
         self.missed_coins = []
         self.latest_speed = self.game.speed
-        return self._get_observation()
+        return self._get_observation(), {}
 
     def step(self, action):
         if action == 0: # Do nothing
