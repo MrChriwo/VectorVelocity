@@ -31,7 +31,7 @@ class VVEnv(gym.Env):
             "collected_coins": spaces.Discrete(20000),
             "speed": spaces.Discrete(MAXIMUM_SPEED+1)
         })
-        self.action_space = spaces.Discrete(1)
+        self.action_space = spaces.Discrete(3)
         self.latest_speed = self.game.speed
         self.current_reward = 0
         self.dodged_obstacles = []
@@ -53,6 +53,8 @@ class VVEnv(gym.Env):
             self.game.player.move_right()
         elif action == 2: # move left
             self.game.player.move_left()
+
+        print(f"{20* '='}\nSPEED: {self.game.speed}\nCOINS: {self.game.collected_coins}\nSCORE: {self.game.score}\n{20* '='}")
 
 
         self.game.update(self.game.clock.tick(FRAME_RATE) / 1000.0)
