@@ -3,7 +3,7 @@ import os
 cwd = os.getcwd()
 sys.path.append(cwd)
 
-from game.settings import FRAME_RATE, SCREEN_HEIGHT, LANE_POSITIONS, MAXIMUM_SPEED
+from game.settings import FRAME_RATE, SCREEN_HEIGHT, LANE_POSITIONS, MAXIMUM_SPEED, PLAYER_Y, LEVEL_WIDTH
 from game.game import Game
 import gymnasium as gym
 from gymnasium import spaces
@@ -17,20 +17,28 @@ class VVEnv(gym.Env):
         super(VVEnv, self).__init__()
         self.mode = mode
         self.game = Game(self.mode)
+        self.num_obstacles = 9
+        self.num_coins = 20
+        self.num_lanes = len(LANE_POSITIONS)
+
+        self.OBSTACLE_Y_CONDITION = -89
+        self.COIN_Y_CONDITION = -19
+        self.OBSTACLE_MIN_X = LANE_POSITIONS[0] - 82
+        self.OBSTACLE_MAX_X = LANE_POSITIONS[-1] + 83
         
         self.observation_space = spaces.Dict({
-            "player_pos": spaces.Discrete(LANE_POSITIONS[-1] +1 ),
-            "obstacles": spaces.Box(
-                low=np.full((9, 2), [-454, -1], dtype=np.int32),
-                high=np.full((9, 2), [SCREEN_HEIGHT + 120, LANE_POSITIONS[-1] + 90], dtype=np.int32),
-                dtype=np.int32),
-            "coins": spaces.Box(
-                low=np.full((40, 2), [-710, -1], dtype=np.int32),
-                high=np.full((40, 2), [SCREEN_HEIGHT + 120, LANE_POSITIONS[-1] + 90], dtype=np.int32),
-                dtype=np.int32),
-            "score": spaces.Discrete(10000),
-            "collected_coins": spaces.Discrete(20000),
-            "speed": spaces.Discrete(MAXIMUM_SPEED+1)
+            "obstacles": spaces.Box(low=-1, high=1, shape=(self.num_obstacles*2,), dtype=np.float32),
+            "coins": spaces.Box(low=-1, high=1, shape=(self.num_coins*2,), dtype=np.float32),
+            "obstacles_y_dist": spaces.Box(low=-1, high=1, shape=(self.num_obstacles,), dtype=np.float32),
+            "obstacles_x_dist": spaces.Box(low=-1, high=1, shape=(self.num_obstacles,), dtype=np.float32),
+            "coin_y_dist": spaces.Box(low=-1, high=1, shape=(self.num_coins,), dtype=np.float32),
+            "coin_x_dist": spaces.Box(low=-1, high=1, shape=(self.num_coins,), dtype=np.float32),
+            "lane_obstacles": spaces.MultiDiscrete([self.num_lanes]*self.num_obstacles ,dtype=np.int32),
+            "lane_coins": spaces.MultiDiscrete([self.num_lanes]*self.num_coins, dtype=np.int32),
+            "score": spaces.Discrete(120000 +1),
+            "collected_coins": spaces.Discrete(20000 +1),
+            "speed": spaces.Discrete(MAXIMUM_SPEED +1),
+            "player_pos": spaces.MultiDiscrete([1], dtype=np.float32)
         })
         self.action_space = spaces.Discrete(3)
         self.latest_speed = self.game.speed
@@ -38,6 +46,42 @@ class VVEnv(gym.Env):
         self.dodged_obstacles = []
         self.missed_coins = []
 
+    def normalize_coordinate(self, object_type: str, value: tuple):
+        if object_type not in ["obstacle", "coin", "player"]:
+            raise ValueError("Invalid object type. Must be either 'obstacle' or 'coin'")
+        
+        if object_type == "obstacle":
+            norm_x = (value[0] - self.OBSTACLE_MIN_X) / (self.OBSTACLE_MAX_X - self.OBSTACLE_MIN_X)
+            norm_y = (value[1] + abs(self.OBSTACLE_Y_CONDITION)) / (SCREEN_HEIGHT + abs(self.OBSTACLE_Y_CONDITION))
+            return norm_x, norm_y
+        elif object_type == "coin":
+            norm_x = (value[0] - LANE_POSITIONS[0]) / (LANE_POSITIONS[-1] - LANE_POSITIONS[0])
+            norm_y = (value[1] + abs(self.COIN_Y_CONDITION)) / (SCREEN_HEIGHT + abs(self.COIN_Y_CONDITION))
+            return norm_x, norm_y
+        elif object_type == "player":
+            norm_x = (value[0] - LANE_POSITIONS[0]) / (LANE_POSITIONS[-1] - LANE_POSITIONS[0])
+            norm_y = PLAYER_Y / SCREEN_HEIGHT
+            return norm_x, norm_y
+        
+    def normalize_distance(self, x, y):
+        max_y_distance = np.sqrt(LEVEL_WIDTH**2 + SCREEN_HEIGHT**2)
+
+        norm_x = x / LEVEL_WIDTH
+        norm_y = y / max_y_distance
+
+        return norm_x, norm_y
+        
+    def calculate_normalized_distance(self, player_pos, object_pos):
+        player_x, player_y = player_pos
+        object_x, object_y = object_pos
+
+        x_dist = player_x - object_x
+        y_dist = player_y - object_y
+
+        x_dist, y_dist = self.normalize_distance(x_dist, y_dist)
+
+        return x_dist, y_dist
+         
     def reset(self, seed=None):
         super().reset(seed=seed) 
         self.game.restart()
@@ -67,28 +111,76 @@ class VVEnv(gym.Env):
         return observation, reward, done, truncated, {}
 
     def _get_observation(self):
+        player_pos = (self.game.player.get_current_positon(), PLAYER_Y)
+        player_x = self.normalize_coordinate("player", player_pos)[0]
+        player_x = np.array([player_x], dtype=np.float32)
 
-        max_obstacles = 9
-        max_coins = 40
-        obstacles = np.full((max_obstacles, 2), -1, dtype=np.int32)
-        coins = np.full((max_coins, 2), -1, dtype=np.int32)
+        score = int(self.game.score)
+        speed = int(self.game.speed)
+        collected_coins = self.game.collected_coins
 
-        game_obstacles = np.array([[obstacle.y, obstacle.x] for obstacle in self.game.spawnMgr.obstacles])
-        game_coins = np.array([[coin.y, coin.x] for coin in self.game.spawnMgr.coins])
-        if game_obstacles.size > 0:
-            obstacles[:len(game_obstacles)] = game_obstacles
-        if game_coins.size > 0:
-            coins[:len(game_coins)] = game_coins
+        obstacles = np.full((self.num_obstacles*2, ), -1, dtype=np.float32)
+        coins = np.full((self.num_coins*2, ), -1, dtype=np.float32)
+        obstacles_lane = np.full((self.num_obstacles, ), 0, dtype=np.int32)
+        coins_lane = np.full((self.num_coins, ), 0, dtype=np.int32)
 
+        obstacles_y_dist = np.full((self.num_obstacles, ), -1, dtype=np.float32)
+        obstacles_x_dist = np.full((self.num_obstacles, ), -1, dtype=np.float32)
+        coin_y_dist = np.full((self.num_coins, ), -1, dtype=np.float32)
+        coin_x_dist = np.full((self.num_coins, ), -1, dtype=np.float32)
+
+        for index, obstacle in enumerate(self.game.spawnMgr.obstacles):
+            if index >= self.num_obstacles:
+                break
+            if obstacle.y < self.OBSTACLE_Y_CONDITION:
+                continue
+            norm_x, norm_y = self.normalize_coordinate("obstacle", (obstacle.x, obstacle.y))
+            obstacles[index] = norm_x
+            obstacles[index +1] = norm_y
+
+            init_spawn_point = obstacle.x - obstacle.x_offset
+            lane = LANE_POSITIONS.index(init_spawn_point) +1
+            obstacles_lane[index] = lane
+
+            x_dist, y_dist = self.calculate_normalized_distance(player_pos, (obstacle.x, obstacle.y))
+            obstacles_x_dist[index] = x_dist
+            obstacles_y_dist[index] = y_dist
+
+        for index, coin in enumerate(self.game.spawnMgr.coins):
+            if index >= self.num_coins:
+                break
+            if coin.y < self.COIN_Y_CONDITION:
+                continue
+            norm_x, norm_y = self.normalize_coordinate("coin", (coin.x, coin.y))
+            coins[index] = norm_x
+            coins[index +1] = norm_y
+
+            lane = LANE_POSITIONS.index(coin.x) +1
+            coins_lane[index] = lane
+
+            x_dist, y_dist = self.calculate_normalized_distance(player_pos, (coin.x, coin.y))
+            coin_x_dist[index] = x_dist
+            coin_y_dist[index] = y_dist
 
         observation = {
-            "player_pos": int(self.game.player.get_current_positon()),
             "obstacles": obstacles,
             "coins": coins,
-            "score": int(self.game.score),
-            "collected_coins": self.game.collected_coins,
-            "speed": int(self.game.speed)
+            "obstacles_y_dist": obstacles_y_dist,
+            "obstacles_x_dist": obstacles_x_dist,
+            "coin_y_dist": coin_y_dist,
+            "coin_x_dist": coin_x_dist,
+            "lane_obstacles": obstacles_lane,
+            "lane_coins": coins_lane,
+            "score": score,
+            "collected_coins": collected_coins,
+            "speed": speed,
+            "player_pos": player_x
         }
+
+        # print(20 * "=")
+        # print("OBSERVATION")
+        # print(observation)
+        # print(20 * "=" + "\n\n")
 
         return observation
     
