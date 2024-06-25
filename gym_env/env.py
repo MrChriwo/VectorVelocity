@@ -33,12 +33,12 @@ class VVEnv(gym.Env):
             "obstacles_x_dist": spaces.Box(low=-1, high=1, shape=(self.num_obstacles,), dtype=np.float32),
             "coin_y_dist": spaces.Box(low=-1, high=1, shape=(self.num_coins,), dtype=np.float32),
             "coin_x_dist": spaces.Box(low=-1, high=1, shape=(self.num_coins,), dtype=np.float32),
-            "lane_obstacles": spaces.MultiDiscrete([self.num_lanes]*self.num_obstacles ,dtype=np.int32),
-            "lane_coins": spaces.MultiDiscrete([self.num_lanes]*self.num_coins, dtype=np.int32),
+            "lane_obstacles": spaces.MultiDiscrete([self.num_lanes +1]*self.num_obstacles ,dtype=np.int32),
+            "lane_coins": spaces.MultiDiscrete([self.num_lanes +1]*self.num_coins, dtype=np.int32),
             "score": spaces.Discrete(120000 +1),
             "collected_coins": spaces.Discrete(20000 +1),
             "speed": spaces.Discrete(MAXIMUM_SPEED +1),
-            "player_pos": spaces.MultiDiscrete([1], dtype=np.float32)
+            "player_pos": spaces.Box(low=0, high=1, shape=(1,), dtype=np.float32)
         })
         self.action_space = spaces.Discrete(3)
         self.latest_speed = self.game.speed
@@ -177,6 +177,8 @@ class VVEnv(gym.Env):
             "player_pos": player_x
         }
 
+
+
         # print(20 * "=")
         # print("OBSERVATION")
         # print(observation)
@@ -250,7 +252,7 @@ if __name__ == "__main__":
         while not done:
             env.render()
             action = 0
-            observation, reward, done, truncated, info = env.step(2)
+            observation, reward, done, truncated, info = env.step(1)
             steps += 1
             if done:
                 print(f"{20* '='}\nEPOCH {_ +1} DONE\nREWARD: {reward}\nSTEPS: {steps}\n{20* '='}")
