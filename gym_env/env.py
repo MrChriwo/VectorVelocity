@@ -29,10 +29,8 @@ class VVEnv(gym.Env):
         self.observation_space = spaces.Dict({
             "obstacles": spaces.Box(low=-1, high=1, shape=(self.num_obstacles*2,), dtype=np.float32),
             "coins": spaces.Box(low=-1, high=1, shape=(self.num_coins*2,), dtype=np.float32),
-            "obstacles_y_dist": spaces.Box(low=-1, high=1, shape=(self.num_obstacles,), dtype=np.float32),
-            "obstacles_x_dist": spaces.Box(low=-1, high=1, shape=(self.num_obstacles,), dtype=np.float32),
-            "coin_y_dist": spaces.Box(low=-1, high=1, shape=(self.num_coins,), dtype=np.float32),
-            "coin_x_dist": spaces.Box(low=-1, high=1, shape=(self.num_coins,), dtype=np.float32),
+            "obstacle_dists": spaces.Box(low=-1, high=1, shape=(self.num_obstacles*2,), dtype=np.float32),
+            "coin_dists": spaces.Box(low=-1, high=1, shape=(self.num_coins*2,), dtype=np.float32),
             "lane_obstacles": spaces.MultiDiscrete([self.num_lanes +1]*self.num_obstacles ,dtype=np.int32),
             "lane_coins": spaces.MultiDiscrete([self.num_lanes +1]*self.num_coins, dtype=np.int32),
             "score": spaces.Discrete(120000 +1),
@@ -124,10 +122,8 @@ class VVEnv(gym.Env):
         obstacles_lane = np.full((self.num_obstacles, ), 0, dtype=np.int32)
         coins_lane = np.full((self.num_coins, ), 0, dtype=np.int32)
 
-        obstacles_y_dist = np.full((self.num_obstacles, ), -1, dtype=np.float32)
-        obstacles_x_dist = np.full((self.num_obstacles, ), -1, dtype=np.float32)
-        coin_y_dist = np.full((self.num_coins, ), -1, dtype=np.float32)
-        coin_x_dist = np.full((self.num_coins, ), -1, dtype=np.float32)
+        obstacles_dists = np.full((self.num_obstacles*2, ), -1, dtype=np.float32)
+        coin_dists = np.full((self.num_coins*2, ), -1, dtype=np.float32)
 
         for index, obstacle in enumerate(self.game.spawnMgr.obstacles):
             if index >= self.num_obstacles:
@@ -143,8 +139,8 @@ class VVEnv(gym.Env):
             obstacles_lane[index] = lane
 
             x_dist, y_dist = self.calculate_normalized_distance(player_pos, (obstacle.x, obstacle.y))
-            obstacles_x_dist[index] = x_dist
-            obstacles_y_dist[index] = y_dist
+            obstacles_dists[index] = x_dist
+            obstacles_dists[index +1] = y_dist
 
         for index, coin in enumerate(self.game.spawnMgr.coins):
             if index >= self.num_coins:
@@ -159,16 +155,14 @@ class VVEnv(gym.Env):
             coins_lane[index] = lane
 
             x_dist, y_dist = self.calculate_normalized_distance(player_pos, (coin.x, coin.y))
-            coin_x_dist[index] = x_dist
-            coin_y_dist[index] = y_dist
+            coin_dists[index] = x_dist
+            coin_dists[index +1] = y_dist
 
         observation = {
             "obstacles": obstacles,
             "coins": coins,
-            "obstacles_y_dist": obstacles_y_dist,
-            "obstacles_x_dist": obstacles_x_dist,
-            "coin_y_dist": coin_y_dist,
-            "coin_x_dist": coin_x_dist,
+            "obstacle_dists": obstacles_dists,
+            "coin_dists": coin_dists,
             "lane_obstacles": obstacles_lane,
             "lane_coins": coins_lane,
             "score": score,
