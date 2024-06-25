@@ -9,7 +9,7 @@ class Player:
         self.target_lane = 1
         self.current_lane = 1
         self.x = x
-        self.y = 500
+        self.y = settings.PLAYER_Y
         self.speed = 1350
 
     @property

@@ -5,6 +5,7 @@ from settings import LANE_POSITIONS
 class Obstacle:
     def __init__(self, gameScreen, speed, lane_x, y, x_offset, assetMgr: AssetManager, id: int):
         self.assetMgr = assetMgr
+        self.x_offset = x_offset
         self.gameScreen = gameScreen
         self.width, self.height = 90, 90
         self.speed = speed
