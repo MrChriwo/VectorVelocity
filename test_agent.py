@@ -1,9 +1,9 @@
 from stable_baselines3 import PPO
-from gym_env.env import VVEnv  # Assuming your environment class is named 'VVEnv' and is in 'gym_env.env'
+from gym_env.env import VVEnv
 
 def main():
     # Load the environment
-    env = VVEnv("human")
+    env = VVEnv("human", 14)
 
     # Load the pre-trained PPO model
     model = PPO.load("ppo1_vv")
