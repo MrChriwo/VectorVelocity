@@ -3,20 +3,23 @@ from gym_env.env import VVEnv  # Assuming your environment class is named 'VVEnv
 
 def main():
     # Load the environment
-    env = VVEnv()
+    env = VVEnv("human")
 
     # Load the pre-trained PPO model
-    model = PPO.load("ppo_vv")
+    model = PPO.load("ppo1_vv")
 
+    # Evaluate the agent
+    reset = env.reset()
+    obs = reset[0]
     done = False
+    while not done:
+        action, _states = model.predict(obs)
+        obs, rewards, done, _, info = env.step(action)
+        env.render()
 
-    for _ in range(1000):
-        obs = env.reset()
-        while not done:
-            action, _states = model.predict(obs, deterministic=True)
-            obs, rewards, done, _, info = env.step(action)
-            env.render()
-        done = False
+        if done: 
+            print(obs["score"])
+
 
 if __name__ == "__main__":
     main()
