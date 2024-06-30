@@ -9,7 +9,7 @@ from asset_manager import AssetManager
 
 class SpawnManager: 
 
-    def __init__(self, player: Player, gameScreen, setGameOver, lane_positions: list, speed, assetMgr: AssetManager):
+    def __init__(self, player: Player, gameScreen, setGameOver, lane_positions: list, speed, assetMgr: AssetManager, seed: int = 42):
         self.gameScreen = gameScreen
         self.player = player
         self.lane_positions = lane_positions
@@ -26,6 +26,7 @@ class SpawnManager:
         self.assetMgr = assetMgr
         self.next_obstacle_id = 0
         self.next_coin_id = 0
+        random.seed(seed)
 
 
     def spawn_level(self):

@@ -11,10 +11,11 @@ from asset_manager import AssetManager
 import numpy as np
 
 class Game:
-    def __init__(self, mode='human'):
+    def __init__(self, mode='human', seed=42):
         self.mode = mode
         # Initialize Pygame with backround image variables
         pygame.init()
+        self.seed = seed
         
         # Set up the display
         if self.mode == 'human':
@@ -45,7 +46,7 @@ class Game:
    
         #  Instances for game mechanics
         self.player = Player(self.lane_positions[1], self.lane_positions, self.assetMgr)
-        self.spawnMgr = SpawnManager(self.player, self.screen, self.set_game_over,  self.lane_positions, self.speed, self.assetMgr)
+        self.spawnMgr = SpawnManager(self.player, self.screen, self.set_game_over,  self.lane_positions, self.speed, self.assetMgr, seed=seed)
         
         # Clock to control frame rate
         self.clock = pygame.time.Clock()
@@ -128,6 +129,7 @@ class Game:
 
 
     def restart(self):
+        self.seed += 1
         self.score = 0
         self.collected_coins = 0
         self.speed = 4
@@ -135,7 +137,7 @@ class Game:
         self.score_increase_multiplier = 1
 
         self.player = Player(self.lane_positions[1], self.lane_positions, self.assetMgr)
-        self.spawnMgr = SpawnManager(self.player, self.screen, self.set_game_over, self.lane_positions, self.speed, self.assetMgr)
+        self.spawnMgr = SpawnManager(self.player, self.screen, self.set_game_over, self.lane_positions, self.speed, self.assetMgr, seed=self.seed)
 
         self.running = True
             
