@@ -56,17 +56,20 @@ class SpawnManager:
 
 
     def check_collisions(self, source, objects, updateCoins = False):
-        for object in objects:
-            if source.rect.colliderect(object.rect):
-                if isinstance(object, Coin):
-                    self.coins.remove(object)
-                    if updateCoins: updateCoins(1)
-                elif isinstance(object, Obstacle):
-                    if pygame.rect.Rect.contains(object.rect, source.rect):
-                        self.coins.remove(source)   
-                        continue
-                    if isinstance(source, Player):   
-                        self.set_game_over()              
+        try: 
+            for object in objects:
+                if source.rect.colliderect(object.rect):
+                    if isinstance(object, Coin):
+                        self.coins.remove(object)
+                        if updateCoins: updateCoins(1)
+                    elif isinstance(object, Obstacle):
+                        if pygame.rect.Rect.contains(object.rect, source.rect):
+                            self.coins.remove(source)   
+                            continue
+                        if isinstance(source, Player):   
+                            self.set_game_over()         
+        except Exception as e:
+            return
 
             
     def spawn_obstacles(self):
