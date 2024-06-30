@@ -9,53 +9,69 @@ import gymnasium as gym
 from gymnasium import spaces
 import numpy as np
 import time 
+import logging
 
 
 class VVEnv(gym.Env):
     metadata = {'render.modes': ['human'], 'render_fps': FRAME_RATE}
 
-    def __init__(self, mode='human'):
+    def __init__(self, mode='agent'):
+
+        """
+        Initialize the VectorVelocity gym environment
+        :param mode: str: 'human' or 'agent' mode
+        - 'human' mode: the environment is rendered
+        - 'agent' mode: the environment is not rendered
+
+        Note: The environment can not be rendered in jupyter notebooks or colabs
+        """
+
+        # init environment
         super(VVEnv, self).__init__()
         self.mode = mode
         self.game = Game(self.mode)
-        self.num_obstacles = 9
-        self.num_coins = 20
-        self.num_lanes = len(LANE_POSITIONS)
 
+        # constant values
         self.OBSTACLE_Y_CONDITION = -89
         self.COIN_Y_CONDITION = -19
         self.OBSTACLE_MIN_X = LANE_POSITIONS[0] - 82
         self.OBSTACLE_MAX_X = LANE_POSITIONS[-1] + 83
-
         self.MAX_Y_DISTANCE = np.sqrt(LEVEL_WIDTH**2 + SCREEN_HEIGHT**2)
+        self.NUM_LANES = len(LANE_POSITIONS)
+        self.NUM_MAX_OBSTACLES = 9
+        self.NUM_MAX_COINS = 20
 
+        # observation space definition
         self.observation_space = spaces.Dict({
-            "obstacles": spaces.Box(low=-1, high=1, shape=(self.num_obstacles*2,), dtype=np.float32),
-            "coins": spaces.Box(low=-1, high=1, shape=(self.num_coins*2,), dtype=np.float32),
-            "obstacle_dists": spaces.Box(low=-1, high=1, shape=(self.num_obstacles*2,), dtype=np.float32),
-            "coin_dists": spaces.Box(low=-1, high=1, shape=(self.num_coins*2,), dtype=np.float32),
-            "lane_obstacles": spaces.MultiDiscrete([self.num_lanes +1]*self.num_obstacles ,dtype=np.int32),
-            "lane_coins": spaces.MultiDiscrete([self.num_lanes +1]*self.num_coins, dtype=np.int32),
+            "obstacles": spaces.Box(low=-1, high=1, shape=(self.NUM_MAX_OBSTACLES*2,), dtype=np.float32),
+            "coins": spaces.Box(low=-1, high=1, shape=(self.NUM_MAX_COINS*2,), dtype=np.float32),
+            "obstacle_dists": spaces.Box(low=-1, high=1, shape=(self.NUM_MAX_OBSTACLES*2,), dtype=np.float32),
+            "coin_dists": spaces.Box(low=-1, high=1, shape=(self.NUM_MAX_COINS*2,), dtype=np.float32),
+            "lane_obstacles": spaces.MultiDiscrete([self.NUM_LANES +1]*self.NUM_MAX_OBSTACLES ,dtype=np.int32),
+            "lane_coins": spaces.MultiDiscrete([self.NUM_LANES +1]*self.NUM_MAX_COINS, dtype=np.int32),
             "score": spaces.Discrete(120000 +1),
             "collected_coins": spaces.Discrete(20000 +1),
             "speed": spaces.Discrete(MAXIMUM_SPEED +1),
             "player_pos": spaces.Box(low=0, high=1, shape=(1,), dtype=np.float32)
         })
-        self.action_space = spaces.Discrete(3)
-        self.latest_speed = self.game.speed
 
+        # action space definition
+        self.action_space = spaces.Discrete(3)
+
+        # rewards and penaltys related variables
+        self.start_time = time.time()
+        self.current_reward = 0
         self.dodged_obstacles = []
         self.missed_coins = []
-        self.start_time = time.time()
+        self.latest_speed = self.game.speed
 
-        # rewards and penaltys
-        self.current_reward = 0
-
+        # reard and penalty values
         self.game_over_penalty = 75
         self.coin_missed_penalty = 3
 
         self.dodged_obstacle_reward = 2
         self.coin_reward = 1
+
 
     def normalize_obstacle_coordinate(self, value: tuple):
         norm_x = (value[0] - self.OBSTACLE_MIN_X) / (self.OBSTACLE_MAX_X - self.OBSTACLE_MIN_X)
@@ -128,16 +144,16 @@ class VVEnv(gym.Env):
         speed = int(self.game.speed)
         collected_coins = self.game.collected_coins
 
-        obstacles = np.full((self.num_obstacles*2, ), -1, dtype=np.float32)
-        coins = np.full((self.num_coins*2, ), -1, dtype=np.float32)
-        obstacles_lane = np.full((self.num_obstacles, ), 0, dtype=np.int32)
-        coins_lane = np.full((self.num_coins, ), 0, dtype=np.int32)
+        obstacles = np.full((self.NUM_MAX_OBSTACLES*2, ), -1, dtype=np.float32)
+        coins = np.full((self.NUM_MAX_COINS*2, ), -1, dtype=np.float32)
+        obstacles_lane = np.full((self.NUM_MAX_OBSTACLES, ), 0, dtype=np.int32)
+        coins_lane = np.full((self.NUM_MAX_COINS, ), 0, dtype=np.int32)
 
-        obstacles_dists = np.full((self.num_obstacles*2, ), -1, dtype=np.float32)
-        coin_dists = np.full((self.num_coins*2, ), -1, dtype=np.float32)
+        obstacles_dists = np.full((self.NUM_MAX_OBSTACLES*2, ), -1, dtype=np.float32)
+        coin_dists = np.full((self.NUM_MAX_COINS*2, ), -1, dtype=np.float32)
 
         for index, obstacle in enumerate(self.game.spawnMgr.obstacles):
-            if index >= self.num_obstacles:
+            if index >= self.NUM_MAX_OBSTACLES:
                 break
             if obstacle.y < self.OBSTACLE_Y_CONDITION:
                 continue
@@ -154,7 +170,7 @@ class VVEnv(gym.Env):
             obstacles_dists[index +1] = y_dist
 
         for index, coin in enumerate(self.game.spawnMgr.coins):
-            if index >= self.num_coins:
+            if index >= self.NUM_MAX_COINS:
                 break
             if coin.y < self.COIN_Y_CONDITION:
                 continue
@@ -181,11 +197,6 @@ class VVEnv(gym.Env):
             "speed": speed,
             "player_pos": player_x
         }
-
-        # print(20 * "=")
-        # print("OBSERVATION")
-        # print(observation)
-        # print(20 * "=" + "\n\n")
 
         return observation
     
@@ -214,11 +225,9 @@ class VVEnv(gym.Env):
             if obstacle.y >= self.game.player.y +100:
                 self.dodged_obstacles.append(obstacle.id)
                 reward += self.dodged_obstacle_reward * speed_factor
-                # print("Dodged obstacle")
             
         # clean up dodged obstacles
         self.dodged_obstacles = [id for id in self.dodged_obstacles if id in [obstacle.id for obstacle in self.game.spawnMgr.obstacles]]
-
 
         # Reward for collecting coins
         if self.game.collected_coins > self.game.last_updated_coins:
