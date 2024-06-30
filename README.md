@@ -10,7 +10,9 @@
 - [🙋‍♂️ Introduction](#introduction)
 - [🎮 Game Description](#game-description)
     - [Third Party Assets](#third-party-assets)
-- [🤖 Problem Domain for RL Agent](#problem-domain)
+- [🤖 RL Agent](#rl-agent)
+    - [Problem Domain](#problem-domain)
+    - [Agents](#agents)
 
 
 # Introduction 
@@ -32,9 +34,22 @@ This game was enriched significantly by incorporating various third-party assets
 We extend a huge thanks to the mentioned authors for making their work freely available.
 
 
-# Problem Domain
+# RL Agent
 
+## Problem Domain 
 The challenge for the RL agent in VectorVelocity is to learn optimal strategies for maximizing the score by skillfully collecting coins while avoiding asteroids. The agent is required to make decisions in real-time, adjusting to the game's increasing speed and the randomness of asteroid placements. Additionally, some coins spawn between asteroids in positions that may not always be reachable, adding a layer of decision-making complexity. This requires the player, and consequently the RL agent, to assess whether pursuing a coin is worth the risk of potential collision. This problem domain provides a rich and challenging environment for exploring and refining reinforcement learning techniques.
 
 
-detailed description about the agent coming soon. 
+## Agents 
+
+We have decided to use the Proximal Policy Optimization (PPO) algorithm to train an agent within our environment. PPO, a reinforcement learning algorithm developed by OpenAI, is known for its robustness and efficiency in learning policies for various types of environments. The following table provides links to the trained agents in this environment.
+
+<table>
+  <tr>
+    <th>Agent</th>
+    <th>Link</th>
+  </tr>
+  <tr>
+    <td>Baseline Model</td>
+    <td><a href="https://drive.google.com/file/d/1ezKkGTtgKs4HL3Q4_JsqAVzPtzWCb0y6/view?usp=sharing">Download</a></td>
+  </tr>

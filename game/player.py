@@ -9,7 +9,7 @@ class Player:
         self.target_lane = 1
         self.current_lane = 1
         self.x = x
-        self.y = 500
+        self.y = settings.PLAYER_Y
         self.speed = 1350
 
     @property
@@ -35,6 +35,9 @@ class Player:
     def move_right(self):
         if self.current_lane < len(self.lane_positions) - 1:
             self.target_lane = self.current_lane + 1
+
+    def stay_in_lane(self):
+        self.target_lane = self.current_lane
 
     def draw(self, screen):
         screen.blit(self.image, (self.x, self.y))

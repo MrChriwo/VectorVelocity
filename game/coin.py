@@ -1,13 +1,16 @@
 import pygame
 from obstacle import Obstacle
+from settings import LANE_POSITIONS
 
 
 class Coin: 
-    def __init__(self, gameScreen, speed, y,  lane):
-        self.x = lane
+    def __init__(self, gameScreen, speed, y,  lane_x, id: int):
+        self.x = lane_x
+        self.lane = LANE_POSITIONS.index(lane_x)
         self.y = y
         self.speed = speed
         self.gameScreen = gameScreen
+        self.id = id
 
 
     @property

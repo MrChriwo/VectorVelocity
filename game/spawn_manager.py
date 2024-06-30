@@ -9,7 +9,7 @@ from asset_manager import AssetManager
 
 class SpawnManager: 
 
-    def __init__(self, player: Player, gameScreen, setGameOver, lane_positions: list, speed, assetMgr: AssetManager):
+    def __init__(self, player: Player, gameScreen, setGameOver, lane_positions: list, speed, assetMgr: AssetManager, seed: int = 42):
         self.gameScreen = gameScreen
         self.player = player
         self.lane_positions = lane_positions
@@ -24,6 +24,9 @@ class SpawnManager:
         self.level = LevelArea(gameScreen)
         self.set_game_over = setGameOver
         self.assetMgr = assetMgr
+        self.next_obstacle_id = 0
+        self.next_coin_id = 0
+        random.seed(seed)
 
 
     def spawn_level(self):
@@ -54,17 +57,20 @@ class SpawnManager:
 
 
     def check_collisions(self, source, objects, updateCoins = False):
-        for object in objects:
-            if source.rect.colliderect(object.rect):
-                if isinstance(object, Coin):
-                    self.coins.remove(object)
-                    if updateCoins: updateCoins(1)
-                elif isinstance(object, Obstacle):
-                    if pygame.rect.Rect.contains(object.rect, source.rect):
-                        self.coins.remove(source)   
-                        continue
-                    if isinstance(source, Player):   
-                        self.set_game_over()              
+        try: 
+            for object in objects:
+                if source.rect.colliderect(object.rect):
+                    if isinstance(object, Coin):
+                        self.coins.remove(object)
+                        if updateCoins: updateCoins(1)
+                    elif isinstance(object, Obstacle):
+                        if pygame.rect.Rect.contains(object.rect, source.rect):
+                            self.coins.remove(source)   
+                            continue
+                        if isinstance(source, Player):   
+                            self.set_game_over()         
+        except Exception as e:
+            return
 
             
     def spawn_obstacles(self):
@@ -77,11 +83,13 @@ class SpawnManager:
             x_offset = random.randint(-82, 83)
             if lane is None:
                 return
-            obstacle = Obstacle(self.gameScreen, self.speed, lane, y_offset, x_offset, self.assetMgr)
+            obstacle_id = self.next_obstacle_id
+            obstacle = Obstacle(self.gameScreen, self.speed, lane, y_offset, x_offset, self.assetMgr, obstacle_id)
 
             y_offset -= settings.OBSTACLE_Y_OFFSET_DECREASE
             spawned.append(obstacle)
             self.obstacles.append(obstacle)
+            self.next_obstacle_id += 1
             self.used_lanes.append(lane)
 
 
@@ -95,8 +103,10 @@ class SpawnManager:
 
         for _ in range(lane_count):
             for i in range(spawn_count):
-                coin = Coin(self.gameScreen, self.speed, y, roi[_])
+                coin_id = self.next_coin_id
+                coin = Coin(self.gameScreen, self.speed, y, roi[_], coin_id)
                 self.coins.append(coin)
+                self.next_coin_id += 1
                 y -= settings.COIN_Y_OFFSET_DECREASE
 
 
