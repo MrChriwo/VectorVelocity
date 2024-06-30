@@ -3,6 +3,11 @@ import numpy as np
 from env import VVEnv 
 import time 
 
+
+## DEPCRECATED 
+## CAN NOT BE USED BECAUSE ENVIORNMENT HAS BEEN CHANGED
+# TO DO: UPDATE TESTS TO REFLECT NEW ENVIRONMENT
+
 class TestVVEnv(unittest.TestCase):
 
     def setUp(self):
