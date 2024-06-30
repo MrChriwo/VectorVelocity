@@ -8,6 +8,7 @@ from game.game import Game
 import gymnasium as gym
 from gymnasium import spaces
 import numpy as np
+import time 
 
 
 class VVEnv(gym.Env):
@@ -25,7 +26,9 @@ class VVEnv(gym.Env):
         self.COIN_Y_CONDITION = -19
         self.OBSTACLE_MIN_X = LANE_POSITIONS[0] - 82
         self.OBSTACLE_MAX_X = LANE_POSITIONS[-1] + 83
-        
+
+        self.MAX_Y_DISTANCE = np.sqrt(LEVEL_WIDTH**2 + SCREEN_HEIGHT**2)
+
         self.observation_space = spaces.Dict({
             "obstacles": spaces.Box(low=-1, high=1, shape=(self.num_obstacles*2,), dtype=np.float32),
             "coins": spaces.Box(low=-1, high=1, shape=(self.num_coins*2,), dtype=np.float32),
@@ -40,32 +43,39 @@ class VVEnv(gym.Env):
         })
         self.action_space = spaces.Discrete(3)
         self.latest_speed = self.game.speed
-        self.current_reward = 0
+
         self.dodged_obstacles = []
         self.missed_coins = []
+        self.start_time = time.time()
 
-    def normalize_coordinate(self, object_type: str, value: tuple):
-        if object_type not in ["obstacle", "coin", "player"]:
-            raise ValueError("Invalid object type. Must be either 'obstacle' or 'coin'")
-        
-        if object_type == "obstacle":
-            norm_x = (value[0] - self.OBSTACLE_MIN_X) / (self.OBSTACLE_MAX_X - self.OBSTACLE_MIN_X)
-            norm_y = (value[1] + abs(self.OBSTACLE_Y_CONDITION)) / (SCREEN_HEIGHT + abs(self.OBSTACLE_Y_CONDITION))
-            return norm_x, norm_y
-        elif object_type == "coin":
-            norm_x = (value[0] - LANE_POSITIONS[0]) / (LANE_POSITIONS[-1] - LANE_POSITIONS[0])
-            norm_y = (value[1] + abs(self.COIN_Y_CONDITION)) / (SCREEN_HEIGHT + abs(self.COIN_Y_CONDITION))
-            return norm_x, norm_y
-        elif object_type == "player":
-            norm_x = (value[0] - LANE_POSITIONS[0]) / (LANE_POSITIONS[-1] - LANE_POSITIONS[0])
-            norm_y = PLAYER_Y / SCREEN_HEIGHT
-            return norm_x, norm_y
+        # rewards and penaltys
+        self.current_reward = 0
+
+        self.game_over_penalty = 75
+        self.coin_missed_penalty = 3
+
+        self.dodged_obstacle_reward = 2
+        self.coin_reward = 1
+
+    def normalize_obstacle_coordinate(self, value: tuple):
+        norm_x = (value[0] - self.OBSTACLE_MIN_X) / (self.OBSTACLE_MAX_X - self.OBSTACLE_MIN_X)
+        norm_y = (value[1] + abs(self.OBSTACLE_Y_CONDITION)) / (SCREEN_HEIGHT + abs(self.OBSTACLE_Y_CONDITION))
+        return norm_x, norm_y
+    
+    def normalize_coin_coordinate(self, value: tuple):
+        norm_x = (value[0] - LANE_POSITIONS[0]) / (LANE_POSITIONS[-1] - LANE_POSITIONS[0])
+        norm_y = (value[1] + abs(self.COIN_Y_CONDITION)) / (SCREEN_HEIGHT + abs(self.COIN_Y_CONDITION))
+        return norm_x, norm_y
+    
+    def normalize_player_coordinate(self, value: tuple):
+        norm_x = (value[0] - LANE_POSITIONS[0]) / (LANE_POSITIONS[-1] - LANE_POSITIONS[0])
+        norm_y = PLAYER_Y / SCREEN_HEIGHT
+        return norm_x, norm_y
+
         
     def normalize_distance(self, x, y):
-        max_y_distance = np.sqrt(LEVEL_WIDTH**2 + SCREEN_HEIGHT**2)
-
         norm_x = x / LEVEL_WIDTH
-        norm_y = y / max_y_distance
+        norm_y = y / self.MAX_Y_DISTANCE
 
         return norm_x, norm_y
         
@@ -82,22 +92,23 @@ class VVEnv(gym.Env):
          
     def reset(self, seed=None):
         super().reset(seed=seed) 
-        self.game.restart()
         self.current_reward = 0
         self.dodged_obstacles = []
         self.missed_coins = []
         self.latest_speed = self.game.speed
-        return self._get_observation(), {}
+        self.start_time = time.time()
+
+        self.game.restart()
+
+        return self._get_observation()
 
     def step(self, action):
         if action == 0: # Do nothing
-            self.game.player.x = self.game.player.get_current_positon()
+            self.game.player.stay_in_lane()
         elif action == 1:  # Move right
             self.game.player.move_right()
         elif action == 2: # move left
             self.game.player.move_left()
-
-
 
         self.game.update(self.game.clock.tick(FRAME_RATE) / 1000.0)
         observation = self._get_observation()
@@ -110,7 +121,7 @@ class VVEnv(gym.Env):
 
     def _get_observation(self):
         player_pos = (self.game.player.get_current_positon(), PLAYER_Y)
-        player_x = self.normalize_coordinate("player", player_pos)[0]
+        player_x = self.normalize_player_coordinate(player_pos)[0]
         player_x = np.array([player_x], dtype=np.float32)
 
         score = int(self.game.score)
@@ -130,7 +141,7 @@ class VVEnv(gym.Env):
                 break
             if obstacle.y < self.OBSTACLE_Y_CONDITION:
                 continue
-            norm_x, norm_y = self.normalize_coordinate("obstacle", (obstacle.x, obstacle.y))
+            norm_x, norm_y = self.normalize_obstacle_coordinate((obstacle.x, obstacle.y))
             obstacles[index] = norm_x
             obstacles[index +1] = norm_y
 
@@ -147,7 +158,7 @@ class VVEnv(gym.Env):
                 break
             if coin.y < self.COIN_Y_CONDITION:
                 continue
-            norm_x, norm_y = self.normalize_coordinate("coin", (coin.x, coin.y))
+            norm_x, norm_y = self.normalize_coin_coordinate((coin.x, coin.y))
             coins[index] = norm_x
             coins[index +1] = norm_y
 
@@ -171,8 +182,6 @@ class VVEnv(gym.Env):
             "player_pos": player_x
         }
 
-
-
         # print(20 * "=")
         # print("OBSERVATION")
         # print(observation)
@@ -181,33 +190,39 @@ class VVEnv(gym.Env):
         return observation
     
 
+    def normalize_reward(self, reward):
+        return reward / 10
+
     def _get_reward(self):
+        current_time = time.time()
+        time_elapsed = current_time - self.start_time
+        time_reward = time_elapsed * 0.1
         reward = self.current_reward
         speed_factor = self.game.speed / 4 
-        coin_reward = 10
-        # score_reward = 20
-        game_over_penalty = 75
-        dodged_obstacle_reward = 5
-        coin_missed_penalty = 4
+
+        if self.game.is_game_over():
+            reward -= self.game_over_penalty * speed_factor
+            self.current_reward = reward
+            return reward
+        
+        reward += time_reward
 
         # Reward for dodging obstacles
         for obstacle in self.game.spawnMgr.obstacles:
             if obstacle.id in self.dodged_obstacles:
                 continue
-            if obstacle.y >= self.game.player.y +100 and not self.game.is_game_over():
+            if obstacle.y >= self.game.player.y +100:
                 self.dodged_obstacles.append(obstacle.id)
-                reward += dodged_obstacle_reward * speed_factor
+                reward += self.dodged_obstacle_reward * speed_factor
                 # print("Dodged obstacle")
             
-            for id in self.dodged_obstacles:
-                if id not in [obstacle.id for obstacle in self.game.spawnMgr.obstacles]:
-                    self.dodged_obstacles.remove(id)
-                    # print("Removed obstacle id", id)
+        # clean up dodged obstacles
+        self.dodged_obstacles = [id for id in self.dodged_obstacles if id in [obstacle.id for obstacle in self.game.spawnMgr.obstacles]]
 
 
         # Reward for collecting coins
         if self.game.collected_coins > self.game.last_updated_coins:
-            reward += coin_reward * speed_factor
+            reward += self.coin_reward * speed_factor
             self.game.last_updated_coins = self.game.collected_coins
             # print("Collected coin")
 
@@ -217,20 +232,16 @@ class VVEnv(gym.Env):
                 continue
             if coin.y >= self.game.player.y + 20:
                 self.missed_coins.append(coin.id)
-                reward -= coin_missed_penalty * speed_factor
+                reward -= self.coin_missed_penalty * speed_factor
                 # print("Missed coin")
             
-            for id in self.missed_coins:
-                if id not in [coin.id for coin in self.game.spawnMgr.coins]:
-                    self.missed_coins.remove(id)
+        # clean up missed coins
+        self.missed_coins = [id for id in self.missed_coins if id in [coin.id for coin in self.game.spawnMgr.coins]]
+
+        reward = self.normalize_reward(reward)
                              
-
-        # Penalty for game over
-        if self.game.is_game_over():
-            reward -= game_over_penalty * speed_factor
-
         self.current_reward = reward
-        return int(reward)
+        return reward
     
     def render(self):
         self.game.render()
@@ -239,15 +250,17 @@ class VVEnv(gym.Env):
 if __name__ == "__main__":
     env = VVEnv()
     env.reset()
-    for _ in range(10):
+
+    for _ in range(1000):
+        obs = env.reset()
         done = False
-        env.reset()
-        steps = 0
+
         while not done:
+            action = env.action_space.sample()
+            obs, rewards, done, _, info = env.step(action)
             env.render()
-            action = 0
-            observation, reward, done, truncated, info = env.step(1)
-            steps += 1
+
             if done:
-                print(f"{20* '='}\nEPOCH {_ +1} DONE\nREWARD: {reward}\nSTEPS: {steps}\n{20* '='}")
-                steps = 0
+                print("Episode finished with reward: ", rewards)
+                print("score", obs["score"])
+                break
