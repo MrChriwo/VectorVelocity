@@ -36,6 +36,9 @@ class Player:
         if self.current_lane < len(self.lane_positions) - 1:
             self.target_lane = self.current_lane + 1
 
+    def stay_in_lane(self):
+        self.target_lane = self.current_lane
+
     def draw(self, screen):
         screen.blit(self.image, (self.x, self.y))
     
