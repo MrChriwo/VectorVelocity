@@ -1,0 +1,11 @@
+include README.md
+include LICENSE
+graft gym_vectorvelocity/game/assets
+global-include *.png
+global-include *.jpg
+global-include *.jpeg
+global-include *.gif
+global-include *.wav
+global-include *.mp3
+global-include *.txt
+global-include *.json
