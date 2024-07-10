@@ -2,7 +2,7 @@
 SCREEN_WIDTH = 1024
 SCREEN_HEIGHT = 768
 FRAME_RATE = 60
-CAPTION = 'Vector Velocity - Pygame'
+CAPTION = 'Vector Velocity'
 
 MUSIC_VOLUME = 0.0
 

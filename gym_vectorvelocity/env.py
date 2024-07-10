@@ -1,4 +1,3 @@
-import sys; import os; sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 from game.settings import FRAME_RATE, SCREEN_HEIGHT, LANE_POSITIONS, MAXIMUM_SPEED, PLAYER_Y, LEVEL_WIDTH
 from game.game import Game
@@ -7,7 +6,7 @@ from gymnasium import spaces
 import numpy as np
 import time 
 
-class VVEnv(gym.Env):
+class Enviornment(gym.Env):
     metadata = {'render.modes': ['human'], 'render_fps': FRAME_RATE}
 
     def __init__(self, mode='agent', seed=42):
@@ -21,7 +20,7 @@ class VVEnv(gym.Env):
         """
 
         # init environment
-        super(VVEnv, self).__init__()
+        super(Enviornment, self).__init__()
         self.mode = mode
         self.seed = seed
 
@@ -279,10 +278,11 @@ class VVEnv(gym.Env):
 
         return reward
 
-    def _calculate_missed_coin_penalty(self, speed_factor):
+    def _calculate_missed_coin_penalty(self, speed_factor: float):
         """
         Calculate the penalty for missing coins. 
         missed coin is a coin that has passed the player without being collected
+        :param speed_factor: float: the speed factor of the game
         """
         reward = 0
 
@@ -300,9 +300,10 @@ class VVEnv(gym.Env):
         return reward
        
     
-    def _calculate_collected_coin_reward(self, speed_factor):
+    def _calculate_collected_coin_reward(self, speed_factor: float):
         """
         Calculate the reward for collecting coins
+        :param speed_factor: float: the speed factor of the game
         """
         reward = 0
         if self.game.collected_coins > self.game.last_updated_coins:
@@ -356,7 +357,7 @@ class VVEnv(gym.Env):
 
 
 if __name__ == "__main__":
-    env = VVEnv("human")
+    env = Enviornment("human")
     reset = env.reset()
     done = False
     while not done:
