@@ -356,17 +356,31 @@ class Enviornment(gym.Env):
         self.game.render()
 
 
-if __name__ == "__main__":
-    env = Enviornment("human")
-    reset = env.reset()
-    done = False
-    while not done:
-        action = env.action_space.sample()
-        obs, rewards, done, _, info = env.step(action)
-        env.render()
-        print("dodged obstacles", env.dodged_obstacles)
-        print("missed coins", env.missed_coins)
-        if done:
-            print(rewards)
-            break
+def test_with_random_moves(episodes=10):
+    """
+    Test the environment with random moves
+    :param episodes: int: number of episodes to run
+    """
+
+    for episode in range(episodes):
+        env = Enviornment("human")
+        reset = env.reset()
+        done = False
+        while not done:
+            action = env.action_space.sample()
+            obs, rewards, done, _, info = env.step(action)
+            env.render()
+            if done:
+                print(f"Episode {episode} ended with reward: {rewards}")
     env.close()
+
+def play_as_human():
+    """
+    starts the game and makes it playable by the user
+    """
+    game = Game("human")
+    game.run()
+
+
+if __name__ == "__main__":
+    play_as_human()

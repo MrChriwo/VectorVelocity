@@ -169,7 +169,3 @@ class Game:
 
     def quit(self):
         pygame.quit()
-
-if __name__ == "__main__":
-    game = Game("human")
-    game.run()

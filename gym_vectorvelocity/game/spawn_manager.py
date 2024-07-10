@@ -148,7 +148,7 @@ class SpawnManager:
         for coin in self.coins:
             if len(self.obstacles) == 0:
                 break
-            self.__check_collisions(coin, self.obstacles)
+            self.check_collisions(coin, self.obstacles)
 
         self.obstacle_spawn_timer += dt
         self.coin_spawn_timer += dt
