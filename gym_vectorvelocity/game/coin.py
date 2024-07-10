@@ -1,6 +1,6 @@
 import pygame
-from obstacle import Obstacle
-from settings import LANE_POSITIONS
+from .obstacle import Obstacle
+from .settings import LANE_POSITIONS
 
 
 class Coin: 

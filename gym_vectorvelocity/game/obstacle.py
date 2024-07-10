@@ -1,7 +1,7 @@
 import pygame
 import random
-from asset_manager import AssetManager
-from settings import LANE_POSITIONS
+from .asset_manager import AssetManager
+from .settings import LANE_POSITIONS
 class Obstacle:
     def __init__(self, gameScreen, speed, lane_x, y, x_offset, assetMgr: AssetManager, id: int):
         self.assetMgr = assetMgr

@@ -1,6 +1,6 @@
 import pygame
-import settings
-from asset_manager import AssetManager
+from . import settings
+from .asset_manager import AssetManager
 
 class Player:
     def __init__(self, x, lane_positions, assetMgr: AssetManager):

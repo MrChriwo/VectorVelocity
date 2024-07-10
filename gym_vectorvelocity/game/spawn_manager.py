@@ -1,11 +1,11 @@
 import pygame
-from obstacle import Obstacle
-from coin import Coin
+from .obstacle import Obstacle
+from .coin import Coin
 import random
-from player import Player
-from level_area import LevelArea
-import settings
-from asset_manager import AssetManager
+from .player import Player
+from .level_area import LevelArea
+from . import settings 
+from .asset_manager import AssetManager
 
 class SpawnManager: 
 

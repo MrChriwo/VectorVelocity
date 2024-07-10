@@ -3,11 +3,11 @@
 # For more information, visit https://www.vecteezy.com
 
 import pygame
-from player import Player
-import settings
-from spawn_manager import SpawnManager
-from ui import UI
-from asset_manager import AssetManager
+from .player import Player
+from . import settings 
+from .spawn_manager import SpawnManager
+from .ui import UI
+from .asset_manager import AssetManager
 import numpy as np
 
 class Game:

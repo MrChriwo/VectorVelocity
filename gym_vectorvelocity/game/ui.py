@@ -1,6 +1,5 @@
 import pygame
-import settings
-
+from . import settings
 class UI:
     def __init__(self, screen):
         self.screen = screen
