@@ -7,7 +7,7 @@ import numpy as np
 import time 
 
 class VectorVelocityEnv(gym.Env):
-    metadata = {'render.modes': ['human'], 'render_fps': FRAME_RATE}
+    metadata = {'render_modes': ['human'], 'render_fps': FRAME_RATE}
 
     def __init__(self, mode='agent', seed=42):
         """
