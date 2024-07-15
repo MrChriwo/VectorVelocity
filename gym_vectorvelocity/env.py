@@ -1,12 +1,12 @@
 
-from game.settings import FRAME_RATE, SCREEN_HEIGHT, LANE_POSITIONS, MAXIMUM_SPEED, PLAYER_Y, LEVEL_WIDTH
-from game.game import Game
+from .game.settings import FRAME_RATE, SCREEN_HEIGHT, LANE_POSITIONS, MAXIMUM_SPEED, PLAYER_Y, LEVEL_WIDTH
+from .game.game import Game
 import gymnasium as gym
 from gymnasium import spaces
 import numpy as np
 import time 
 
-class Enviornment(gym.Env):
+class VectorVelocityEnv(gym.Env):
     metadata = {'render.modes': ['human'], 'render_fps': FRAME_RATE}
 
     def __init__(self, mode='agent', seed=42):
@@ -20,7 +20,7 @@ class Enviornment(gym.Env):
         """
 
         # init environment
-        super(Enviornment, self).__init__()
+        super(VectorVelocityEnv, self).__init__()
         self.mode = mode
         self.seed = seed
 
@@ -354,33 +354,3 @@ class Enviornment(gym.Env):
     
     def render(self):
         self.game.render()
-
-
-def test_with_random_moves(episodes=10):
-    """
-    Test the environment with random moves
-    :param episodes: int: number of episodes to run
-    """
-
-    for episode in range(episodes):
-        env = Enviornment("human")
-        reset = env.reset()
-        done = False
-        while not done:
-            action = env.action_space.sample()
-            obs, rewards, done, _, info = env.step(action)
-            env.render()
-            if done:
-                print(f"Episode {episode} ended with reward: {rewards}")
-    env.close()
-
-def play_as_human():
-    """
-    starts the game and makes it playable by the user
-    """
-    game = Game("human")
-    game.run()
-
-
-if __name__ == "__main__":
-    play_as_human()
