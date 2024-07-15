@@ -14,13 +14,11 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     zlib1g-dev \
     && rm -rf /var/index/lib/apt/lists/*
 
-COPY requirements.txt /workspace/requirements.txt
-
-RUN pip install --no-cache-dir -r /workspace/requirements.txt
-
 COPY . /workspace
 
-RUN pip install jupyter
+RUN pip install --no-cache-dir -r /workspace/requirements-dev.txt \
+    && pip install jupyter \
+    && pip install .
 
 RUN apt-get purge -y \
     build-essential \
@@ -31,6 +29,4 @@ RUN apt-get purge -y \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-CMD ["jupyter", "notebook", "--ip='0.0.0.0'", "--port=8888", "--no-browser", "--allow-root", "--NotebookApp.token=''", "--Notebookup.password=''"]
 
-EXPOSE 8888

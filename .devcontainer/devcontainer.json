@@ -1,0 +1,19 @@
+{
+    "name": "VectorVelocity Dev Container",
+    "dockerFile": "../Dockerfile",
+    "customizations": {
+        "vscode": {
+            "settings": {
+                "terminal.integrated.defaultProfile.linux": "bash",
+                "python.pythonPath": "/usr/bin/python3",
+                "workbench.colorTheme": "Dracula"
+            },
+            "extensions": [
+                "dracula-theme.theme-dracula",
+                "ms-python.python",
+                "ms-python.vscode-pylance",
+                "ms-toolsai.jupyter"
+            ]
+        }
+    }
+}
