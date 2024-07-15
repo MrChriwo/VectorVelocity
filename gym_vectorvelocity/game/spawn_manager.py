@@ -1,13 +1,23 @@
 import pygame
-from obstacle import Obstacle
-from coin import Coin
+from .obstacle import Obstacle
+from .coin import Coin
 import random
-from player import Player
-from level_area import LevelArea
-import settings
-from asset_manager import AssetManager
+from .player import Player
+from .level_area import LevelArea
+from . import settings 
+from .asset_manager import AssetManager
 
 class SpawnManager: 
+    """
+    SpawnManager class to manage the spawning and moving of objects inside the game.
+    :param player: The player object.
+    :param gameScreen: The game screen object.
+    :param setGameOver: The function to set the game over state.
+    :param lane_positions: list, The list of lane positions.
+    :param speed: float, The speed of the objects.
+    :param assetMgr: The asset manager object.
+    :param seed: int, The seed for the random number generator.
+    """
 
     def __init__(self, player: Player, gameScreen, setGameOver, lane_positions: list, speed, assetMgr: AssetManager, seed: int = 42):
         self.gameScreen = gameScreen
@@ -29,26 +39,36 @@ class SpawnManager:
         random.seed(seed)
 
 
-    def spawn_level(self):
+    def __spawn_level(self):
+        """
+        Spawn the level area.
+        """
         self.level.draw()
 
-
     def update_spawn_rates(self):
-        # print("spawn rate: ", self.obstacle_spawn_rate)
+        """
+        Update the spawn rates of the obstacles and coins.
+        """
         if self.obstacle_spawn_rate >= settings.MAINIMUM_OBSTACLE_SPAWN_RATE:
             self.obstacle_spawn_rate -= settings.OBSTACLE_SPAWN_RATE_DECREASE
             self.coin_spawn_rate = (self.obstacle_spawn_rate + 2) * settings.COIN_SPAWN_RATE_MULTIPLIER
-            # print("spawn rate updated: ", self.obstacle_spawn_rate)
 
 
-    def get_available_lane(self):
+    def __get_available_lane(self):
+        """
+        Get an available lane to spawn an object.
+        """
         available_lanes = [lane for lane in self.lane_positions if lane not in self.used_lanes]
         if not available_lanes:
             return None
         return random.choice(available_lanes)
 
 
-    def update_speed(self, speed):
+    def update_speed(self, speed: float):
+        """
+        Update the speed of the objects.
+        :param speed: float, The new speed of the objects.
+        """
         self.speed = speed
         for obstacle in self.obstacles:
             obstacle.speed = speed
@@ -56,7 +76,12 @@ class SpawnManager:
             coin.speed = speed
 
 
-    def check_collisions(self, source, objects, updateCoins = False):
+    def check_collisions(self, source: any, objects: list, updateCoins = False):
+        """
+        Check for collisions between the source object and the list of objects.
+        :param source: The source object.
+        :param objects: The list of objects to check for collisions.
+        """
         try: 
             for object in objects:
                 if source.rect.colliderect(object.rect):
@@ -77,7 +102,7 @@ class SpawnManager:
         count = random.randint(1, settings.MAXIMUM_OBSTACLE_SPAWN_COUNT)
         spawned = []
         y_offset = -100
-        lane = self.get_available_lane()
+        lane = self.__get_available_lane()
 
         for _ in range(count):    
             x_offset = random.randint(-82, 83)
@@ -110,7 +135,7 @@ class SpawnManager:
                 y -= settings.COIN_Y_OFFSET_DECREASE
 
 
-    def remove_objects(self, objects):
+    def __remove_objects(self, objects):
         for object in objects:
             object.update()
             if object.is_off_screen():
@@ -136,12 +161,12 @@ class SpawnManager:
             self.coin_spawn_timer = 0
             self.spawn_coins()
 
-        self.remove_objects(self.obstacles)
-        self.remove_objects(self.coins)
+        self.__remove_objects(self.obstacles)
+        self.__remove_objects(self.coins)
 
 
     def draw(self):
-        self.spawn_level()
+        self.__spawn_level()
         self.player.draw(self.gameScreen)
         for obstacle in self.obstacles:
             obstacle.draw(self.gameScreen)

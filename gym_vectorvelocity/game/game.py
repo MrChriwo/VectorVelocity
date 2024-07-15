@@ -3,14 +3,19 @@
 # For more information, visit https://www.vecteezy.com
 
 import pygame
-from player import Player
-import settings
-from spawn_manager import SpawnManager
-from ui import UI
-from asset_manager import AssetManager
+from .player import Player
+from . import settings 
+from .spawn_manager import SpawnManager
+from .ui import UI
+from .asset_manager import AssetManager
 import numpy as np
 
 class Game:
+    """
+    The main game class of VectorVelocity that controls the game loop and game states.
+    :param mode: str, the mode of the game, either 'human' or 'agent'.
+    :param seed: int, the seed for the random number generator.
+    """
     def __init__(self, mode='human', seed=42):
         self.mode = mode
         # Initialize Pygame with backround image variables
@@ -65,18 +70,22 @@ class Game:
     # here we are updating the difficulty of the game, setting up the speed and spawn rates 
     # based on conditions like collected coins and reached score
     def updateDifficulty(self, amount):
+        """
+        Update the game difficulty based on the collected coins and the score with the given amount.
+        :param amount: float, the amount to increase the speed by.
+        """
+        # if the speed is already at the maximum, return
         if self.speed == settings.MAXIMUM_SPEED:
             return
-        if self.last_updated_coins == self.collected_coins:
+        if self.last_updated_coins == self.collected_coins: # if no coins were collected since the last update,
             return
         score_condition = self.score * self.score_increase_multiplier
+        # if the collected coins are a multiple of the speedup factor or the score is a multiple of the score condition
         if (self.collected_coins % settings.COIN_SPEEDUP_FACTOR == 0 and self.collected_coins != 0) or ((int(self.score)) % score_condition == 0 and self.score != 0):          
             self.speed += amount
-            self.spawnMgr.update_speed(self.speed)
-            # print(f"Speed: {self.speed}")
-            self.spawnMgr.update_spawn_rates()
+            self.spawnMgr.update_speed(self.speed) 
+            self.spawnMgr.update_spawn_rates() 
             self.player.update_speed(amount)
-
             self.last_updated_coins = self.collected_coins
             self.score_increase_multiplier += amount
         
@@ -129,7 +138,10 @@ class Game:
 
 
     def restart(self):
-        self.seed += 1
+        """
+        Restart the game.
+        """
+        self.seed += 1 # increasing the seed so the game is different every time
         self.score = 0
         self.collected_coins = 0
         self.speed = 4
@@ -157,7 +169,3 @@ class Game:
 
     def quit(self):
         pygame.quit()
-
-if __name__ == "__main__":
-    game = Game("human")
-    game.run()

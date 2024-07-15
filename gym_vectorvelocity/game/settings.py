@@ -2,7 +2,7 @@
 SCREEN_WIDTH = 1024
 SCREEN_HEIGHT = 768
 FRAME_RATE = 60
-CAPTION = 'Vector Velocity - Pygame'
+CAPTION = 'Vector Velocity'
 
 MUSIC_VOLUME = 0.0
 
@@ -18,10 +18,10 @@ PLAYER_Y =  500
 LANE_POSITIONS = [LEVEL_X + 100, LEVEL_X + LEVEL_WIDTH // 2, LEVEL_X + LEVEL_WIDTH - 190]
 
 # Asset Paths 
-OBSTACLE_ASSET_PATH = "game/assets/obstacles/"
-SOUNDS_ASSET_PATH = "game/assets/sounds/"
-PLAYER_ASSET_PATH = "game/assets/ship.png"
-BACKGROUND_ASSET_PATH = "game/assets/bg.jpg"
+OBSTACLE_ASSET_PATH = "gym_vectorvelocity/game/assets/obstacles/"
+SOUNDS_ASSET_PATH = "gym_vectorvelocity/game/assets/sounds/"
+PLAYER_ASSET_PATH = "gym_vectorvelocity/game/assets/ship.png"
+BACKGROUND_ASSET_PATH = "gym_vectorvelocity/game/assets/bg.jpg"
 
 # difficulty settings
 MAXIMUM_SPEED = 19
