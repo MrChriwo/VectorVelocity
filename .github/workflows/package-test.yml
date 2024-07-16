@@ -9,6 +9,9 @@ on:
   push:
     branches:
       - dev
+      - main
+    paths:
+      - 'gym_vectorvelocity/**'
 
 jobs:
   test:
