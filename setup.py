@@ -15,11 +15,9 @@ setup(
     packages=find_packages(),
     license=CI_LICENCE,
     install_requires=[
-        'gym',
+        'gymnasium',
         'pygame',
         'numpy',
     ],
     include_package_data=True
 )
-
-
