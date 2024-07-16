@@ -4,6 +4,8 @@
     <img src="https://github.com/MrChriwo/VectorVelocity/assets/96289753/66ee0ba9-0f26-4e11-b93d-6bcb097525b4" alt="VectorVelocity" width="65%">
 </div>
 
+[![Documentation](https://img.shields.io/badge/docs-online-green.svg)](https://MrChriwo.github.io/VectorVelocity/)
+![Python Version](https://img.shields.io/badge/python-3.9%20|%203.10%20|%203.11%20|%203.12-blue.svg)
 
 # Table of Contents
 
