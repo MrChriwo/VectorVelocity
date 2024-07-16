@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 import os
 
 CI_VERSION = os.getenv('CI_VERSION')
-CI_LICENCE = os.getenv('CI_license')
+CI_LICENCE = os.getenv('CI_LICENCE')
 
 setup(
     name='vector-velocity-gym',
