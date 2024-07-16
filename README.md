@@ -44,14 +44,10 @@ The challenge for the RL agent in VectorVelocity is to learn optimal strategies 
 
 ## Agents 
 
-We have decided to use the Proximal Policy Optimization (PPO) algorithm to train an agent within our environment. PPO, a reinforcement learning algorithm developed by OpenAI, is known for its robustness and efficiency in learning policies for various types of environments. The following table provides links to the trained agents in this environment.
+We have decided to use the Proximal Policy Optimization (PPO) algorithm to train an agent within our environment. PPO, a reinforcement learning algorithm developed by OpenAI, is known for its robustness and efficiency in learning policies for various types of environments.
 
-<table>
-  <tr>
-    <th>Agent</th>
-    <th>Link</th>
-  </tr>
-  <tr>
-    <td>Baseline Model</td>
-    <td><a href="https://drive.google.com/file/d/1ezKkGTtgKs4HL3Q4_JsqAVzPtzWCb0y6/view?usp=sharing">Download</a></td>
-  </tr>
+### Sample Agent Development
+
+For those interested in seeing a practical implementation or experimenting with the agent development process, sample agent development can be found in the `lab` branch of this repository. This branch includes experimental features and developmental progress on new agent strategies.
+
+To access and contribute to the ongoing agent development, switch to the `lab` branch:
