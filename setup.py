@@ -11,7 +11,7 @@ setup(
     maintainer="MrChriwo",
     url="https://github.com/MrChriwo/VectorVelocity",
     author='MrChriwo & Stevenschneider',
-    packages=find_packages(),
+    packages=find_packages(exclude=('tests', 'tests.*')),
     license=CI_LICENCE,
     install_requires=[
         'gymnasium',
