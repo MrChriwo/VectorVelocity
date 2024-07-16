@@ -6,6 +6,8 @@
 
 [![Documentation](https://img.shields.io/badge/docs-online-green.svg)](https://MrChriwo.github.io/VectorVelocity/)
 ![Python Version](https://img.shields.io/badge/python-3.9%20|%203.10%20|%203.11%20|%203.12-blue.svg)
+[![PyPI version](https://img.shields.io/pypi/v/vector-velocity-gym.svg)](https://pypi.org/project/vector-velocity-gym/)
+
 
 # Table of Contents
 
