@@ -1,0 +1,37 @@
+name: Build and Deploy Sphinx Documentation
+
+on:
+  push:
+    branches:
+      - feat/documentation-setup
+    paths:
+      - 'docs/**'
+      - '.github/workflows/deploy-docs.yml'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install sphinx sphinx_rtd_theme recommonmark sphinx_panels sphinx_copybutton
+
+      - name: Build Sphinx Documentation
+        run: |
+          cd docs
+          make html
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GH_TOKEN }}
+          publish_dir: ./docs/_build/html
