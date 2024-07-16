@@ -41,10 +41,10 @@ class VectorVelocityEnv(gym.Env):
 
         # reard and penalty values
         self.game_over_penalty = 75
-        self.coin_missed_penalty = 3
+        self.coin_missed_penalty = 1
 
         self.dodged_obstacle_reward = 2
-        self.coin_reward = 1
+        self.coin_reward = 3
 
 
     def _init_spaces(self):
