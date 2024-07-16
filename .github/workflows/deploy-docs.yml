@@ -3,7 +3,8 @@ name: Deploy Documentation
 on:
   push:
     branches:
-      - Feat/documentation-setup  
+      - dev
+      - main
     paths:
       - 'docs/**'
       - '.github/workflows/deploy-docs.yml'
