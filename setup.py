@@ -2,13 +2,12 @@ from setuptools import setup, find_packages
 import os
 
 CI_VERSION = os.getenv('CI_VERSION')
-CI_DESCRIPTION = os.getenv('CI_DESCRIPTION')
 CI_LICENCE = os.getenv('CI_license')
 
 setup(
     name='vector-velocity-gym',
     version=CI_VERSION,
-    description=CI_DESCRIPTION,
+    description="A space-themed OpenAI Gym environment for reinforcement learning",
     maintainer="MrChriwo",
     url="https://github.com/MrChriwo/VectorVelocity",
     author='MrChriwo & Stevenschneider',
