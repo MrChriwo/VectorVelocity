@@ -11,6 +11,8 @@ setup(
     maintainer="MrChriwo",
     url="https://github.com/MrChriwo/VectorVelocity",
     author='MrChriwo & Stevenschneider',
+    long_description=open('README.md').read(),
+    long_description_content_type='text/markdown',
     packages=find_packages(exclude=('tests', 'tests.*')),
     license=CI_LICENCE,
     install_requires=[
