@@ -3,30 +3,29 @@ name: Build and Deploy Documentation
 on:
   push:
     branches:
-      - Feat/documentation-setup
+      - Feat/documentation-setup  
     paths:
       - 'docs/**'
       - '.github/workflows/deploy-docs.yml'
-
-  workflow_dispatch:
-
+  workflow_dispatch: 
 
 permissions:
-  contents: read
+  contents: write 
   pages: write
-  id-token: write
-  
+
 concurrency:
   group: "pages"
-  cancel-in-progress: false
+  cancel-in-progress: true  
 
 jobs:
-  build:
+  build-and-deploy:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
-      
+        with:
+          fetch-depth: 0  
+
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
@@ -40,7 +39,7 @@ jobs:
       - name: Build Sphinx Documentation
         run: |
           cd docs
-          make html
+          sphinx-build -b html . _build/html  # Explicitly call sphinx-build for clarity
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
