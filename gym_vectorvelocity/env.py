@@ -1,5 +1,5 @@
 
-from .game.settings import FRAME_RATE, SCREEN_HEIGHT, LANE_POSITIONS, MAXIMUM_SPEED, PLAYER_Y, LEVEL_WIDTH
+from .game.config.settings import FRAME_RATE, SCREEN_HEIGHT, LANE_POSITIONS, MAXIMUM_SPEED, PLAYER_Y, LEVEL_WIDTH
 from .game.game import Game
 import gymnasium as gym
 from gymnasium import spaces
@@ -354,3 +354,7 @@ class VectorVelocityEnv(gym.Env):
     
     def render(self):
         self.game.render()
+
+    def close(self):
+        self.game.quit()
+        super().close()

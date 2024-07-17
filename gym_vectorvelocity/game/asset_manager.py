@@ -1,5 +1,6 @@
 import pygame 
-from . import settings 
+from .config import settings
+from .config.settings import save_setting
 import os
 
 class AssetManager: 
@@ -51,3 +52,4 @@ class AssetManager:
             self.assets['bgmusic'].set_volume(volume)
             if save_to_settings: 
                 settings.MUSIC_VOLUME = volume
+                save_setting('MUSIC_VOLUME', volume)

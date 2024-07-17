@@ -1,5 +1,5 @@
 import pygame
-from . import settings 
+from .config import settings 
 class LevelArea:
     """
     Represents the level area.

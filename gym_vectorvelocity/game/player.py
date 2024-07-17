@@ -1,5 +1,5 @@
 import pygame
-from . import settings
+from .config import settings
 from .asset_manager import AssetManager
 
 class Player:

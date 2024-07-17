@@ -1,7 +1,7 @@
 import pygame
 import random
 from .asset_manager import AssetManager
-from .settings import LANE_POSITIONS
+from .config.settings import LANE_POSITIONS
 class Obstacle:
     """
     Obstacle class to represent an obstacle object in the game.
