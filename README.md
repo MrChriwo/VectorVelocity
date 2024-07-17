@@ -1,7 +1,7 @@
 # VectorVelocity
 
 <div align="center">
-    <img src="https://github.com/user-attachments/assets/c037a647-bbc0-4080-a188-0d9aaf0fe8ff" alt="VectorVelocity" width="65%">
+    <img src="https://github.com/user-attachments/assets/d1bab7cc-f52e-41a2-8d5d-b47f7cdb54a1" alt="VectorVelocity" width="65%">
 </div>
 
 [![Documentation](https://img.shields.io/badge/docs-online-green.svg)](https://MrChriwo.github.io/VectorVelocity/)

@@ -6,6 +6,9 @@ current_dir = os.path.dirname(os.path.abspath(__file__))
 SETTINGS_FILE = os.path.join(current_dir, "settings.json")
 DEFAULTS_FILE = os.path.join(current_dir, "defaults.json")
 
+# root path is current directory ../../
+root_path = os.path.abspath(os.path.join(current_dir, os.pardir, os.pardir))
+
 with open(DEFAULTS_FILE, 'r') as f:
     defaults = json.load(f)
 
@@ -47,10 +50,10 @@ PLAYER_Y = settings['PLAYER_Y']
 LANE_POSITIONS = [LEVEL_X + 100, LEVEL_X + LEVEL_WIDTH // 2, LEVEL_X + LEVEL_WIDTH - 190]
 
 # asset settings
-OBSTACLE_ASSET_PATH = settings['OBSTACLE_ASSET_PATH']
-SOUNDS_ASSET_PATH = settings['SOUNDS_ASSET_PATH']
-PLAYER_ASSET_PATH = settings['PLAYER_ASSET_PATH']
-BACKGROUND_ASSET_PATH = settings['BACKGROUND_ASSET_PATH']
+OBSTACLE_ASSET_PATH = os.path.join(root_path, settings['OBSTACLE_ASSET_PATH'])
+SOUNDS_ASSET_PATH = os.path.join(root_path, settings['SOUNDS_ASSET_PATH'])
+PLAYER_ASSET_PATH = os.path.join(root_path, settings['PLAYER_ASSET_PATH'])
+BACKGROUND_ASSET_PATH = os.path.join(root_path, settings['BACKGROUND_ASSET_PATH'])
 
 
 # difficulty settings
