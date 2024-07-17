@@ -18,7 +18,7 @@
 - [🤖 RL Agent](#rl-agent)
     - [Problem Domain](#problem-domain)
     - [Agents](#agents)
-
+- [💻 Contributing](#contributing) 
 
 # Introduction 
 
@@ -67,3 +67,8 @@ We have decided to use the Proximal Policy Optimization (PPO) algorithm to train
 For those interested in seeing a practical implementation or experimenting with the agent development process, sample agent development can be found in the `lab` branch of this repository. This branch includes experimental features and developmental progress on new agent strategies.
 
 To access and contribute to the ongoing agent development, switch to the `lab` branch:
+
+# Contributing 
+
+We welcome everyone to contribute to the project. Share your ideas, engage in discussions, and help us improve VectorVelocity. To get started, please check out the [CONTRIBUTING.md](CONTRIBUTING.md) file in the repo for detailed guidelines.
+
