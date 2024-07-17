@@ -13,7 +13,7 @@ on:
       - 'gym_vectorvelocity/**'
 
 jobs:
-  test:
+  test-py-version:
     runs-on: ubuntu-latest
     strategy:
       matrix:
