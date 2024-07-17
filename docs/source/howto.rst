@@ -27,6 +27,17 @@ To test if the installation was successful:
    test_with_random_moves()
 
 This function will start the game as an environment, render it, and make random moves inside it.
+By default the testing runs for 5 episodes. You can change the number of episodes by passing the `episodes` parameter to the function.
+
+.. code-block:: python
+
+   from gym_vectorvelocity.utils import test_with_random_moves
+
+   test_with_random_moves(episodes=10)
+
+
+**Note:** This function runs until all episodes are completed. It is recommended to run this function with a small number of episodes.
+Execute run in debug mode to manually stop the execution via debugger if needed
 
 Using the Environment
 ---------------------
