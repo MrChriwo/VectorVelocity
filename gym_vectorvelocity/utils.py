@@ -26,7 +26,7 @@ def test_with_random_moves(episodes=5):
         env.close()
 
 
-def play_as_human(sound_volume: float = 0.0, save_volume: bool = False):
+def play_as_human(sound_volume: float | None = None, save_volume: bool = False):
     """
     starting the VectorVeclcity game and makes it playable by the user
     :param sound_volume: float: audio volume between 0.0 and 1.0
@@ -34,9 +34,13 @@ def play_as_human(sound_volume: float = 0.0, save_volume: bool = False):
     """
     game = Game("human")
 
-    if sound_volume:
+    if sound_volume is None:
+        sound_volume = game.assetMgr.get_asset("bgmusic").get_volume()
+
+    if sound_volume or sound_volume == 0:
         game.assetMgr.set_audio_volume(sound_volume, save_volume)
 
+ 
     game.run()
 
 
