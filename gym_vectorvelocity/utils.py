@@ -2,11 +2,13 @@ from .env import VectorVelocityEnv
 from .game.game import Game
 
 
-def test_with_random_moves(episodes=10):
+def test_with_random_moves(episodes=5):
     """
     Test the VectorVelocity environment with random moves
     :param episodes: int: number of episodes to run
-    xy
+
+    NOTE: This function runs until all episodes are completed. It is recommended to run this function with a small number of episodes.
+    Execute run in debug mode to manually stop the execution via debugger if needed.
     """
     env = VectorVelocityEnv("human")
 
