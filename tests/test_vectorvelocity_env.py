@@ -1,7 +1,7 @@
 import unittest
 import numpy as np
 from gym_vectorvelocity.env import VectorVelocityEnv
-from gym_vectorvelocity.game.settings import MAXIMUM_SPEED
+from gym_vectorvelocity.game.config.settings import MAXIMUM_SPEED
 
 class TestVectorVelocityEnv(unittest.TestCase):
     
