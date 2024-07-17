@@ -1,7 +1,7 @@
 # VectorVelocity
 
 <div align="center">
-    <img src="https://github.com/MrChriwo/VectorVelocity/assets/96289753/66ee0ba9-0f26-4e11-b93d-6bcb097525b4" alt="VectorVelocity" width="65%">
+    <img src="https://github.com/user-attachments/assets/c037a647-bbc0-4080-a188-0d9aaf0fe8ff" alt="VectorVelocity" width="65%">
 </div>
 
 [![Documentation](https://img.shields.io/badge/docs-online-green.svg)](https://MrChriwo.github.io/VectorVelocity/)
@@ -12,8 +12,9 @@
 # Table of Contents
 
 - [🙋‍♂️ Introduction](#introduction)
-- [🎮 Game Description](#game-description)
+- [🎮 Enviornment Description](#enviornment-description)
     - [Third Party Assets](#third-party-assets)
+- [🚀 Getting Started](#getting-started)
 - [🤖 RL Agent](#rl-agent)
     - [Problem Domain](#problem-domain)
     - [Agents](#agents)
@@ -21,9 +22,9 @@
 
 # Introduction 
 
-VectorVelocity is a challenging and engaging space-themed game created using Pygame, where a spaceship navigates through lanes, collecting coins and dodging descending asteroids. This project not only offers entertainment but also serves as a problem domain for a Reinforcement Learning (RL) agent. The core of this project is the development of an RL agent that learns to master the game, implemented in an OpenAI Gym environment tailored specifically for this game.
+VectorVelocity is a space-themed OpenAI Gym environment designed for reinforcement learning. Users pilot a spaceship through an asteroid field while collecting coins. The environment increases in difficulty as the speed escalates, with asteroids and coins spawning randomly, providing dynamic challenges that are ideal for developing and refining Agents
 
-# Game Description 
+# Enviornment Description 
 
 In VectorVelocity, the player controls a spaceship moving across three lanes. The objective is to collect as many coins as possible while avoiding collisions with asteroids that move from the top of the screen to the bottom. As the game progresses, the speed increases, making the game increasingly difficult.
 
@@ -36,6 +37,19 @@ This game was enriched significantly by incorporating various third-party assets
 3. **Background Music**: The atmospheric tunes from Goose Ninjas' Space Music Pack set the perfect mood for our adventures through space. Check out more of Goose Ninjas' music on their [Itch.io page](https://gooseninja.itch.io/).
 
 We extend a huge thanks to the mentioned authors for making their work freely available.
+
+# Getting Started
+
+To install the Vector Velocity Environment, you can use pip. Simply run the following command in your terminal:
+
+
+```sh
+pip install vector-velocity-gym
+```
+
+After installing the environment, you may want to test the installation and explore how to build or use the environment effectively. 
+
+For comprehensive guides and examples, please visit our [offical documentation](https://mrchriwo.github.io/VectorVelocity/)
 
 
 # RL Agent
