@@ -8,7 +8,6 @@ DEFAULTS_FILE = os.path.join(current_dir, "defaults.json")
 
 # root path is current directory ../../
 root_path = os.path.abspath(os.path.join(current_dir, os.pardir, os.pardir))
-print(root_path)
 
 with open(DEFAULTS_FILE, 'r') as f:
     defaults = json.load(f)
