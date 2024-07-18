@@ -12,7 +12,7 @@ To get started with developing and evaluating agents in this branch, follow thes
 
 1. **Clone the Repository:** Start by cloning the repository and checking out the `lab` branch.
    ```bash
-   git clone -b lab https://github.com/your-username/VectorVelocity.git
+   git clone -b lab https://github.com/MrChriwo/VectorVelocity.git
    ```
 
 
