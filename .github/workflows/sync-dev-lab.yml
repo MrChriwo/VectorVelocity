@@ -1,0 +1,34 @@
+name: Sync Dev to Lab
+
+on:
+  push:
+    branches:
+      - dev
+    paths:
+      - 'gym_vectorvelocity/**'
+  workflow_dispatch:
+
+jobs:
+  sync-to-lab:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Dev Branch
+      uses: actions/checkout@v4
+      with:
+        ref: dev
+
+    - name: Set up Git
+      run: |
+        git config --global user.name 'github-actions[bot]'
+        git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+
+    - name: Create New Branch from Dev
+      run: |
+        git checkout -b lab
+
+    - name: Push to Lab Branch
+      run: |
+        git push --force --set-upstream origin lab
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
