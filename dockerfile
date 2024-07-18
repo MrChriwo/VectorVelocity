@@ -16,7 +16,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 COPY requirements.txt /workspace/requirements.txt
 
-RUN pip install --no-cache-dir -r /workspace/requirements.txt
+RUN pip install --no-cache-dir -r /workspace/requirements-dev.txt
 
 COPY . /workspace
 
