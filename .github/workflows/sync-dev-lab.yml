@@ -1,4 +1,4 @@
-name: Sync Dev to Lab
+name: Sync from Dev to Lab
 
 on:
   push:
@@ -9,15 +9,15 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write 
+  contents: write
 
 jobs:
-  sync-to-lab:
+  sync:
     runs-on: ubuntu-latest
 
     steps:
     - name: Checkout Dev Branch
-      uses: actions/checkout@v4
+      uses: actions/checkout@v2
       with:
         ref: dev
 
@@ -26,9 +26,19 @@ jobs:
         git config --global user.name 'github-actions[bot]'
         git config --global user.email 'github-actions[bot]@users.noreply.github.com'
 
-    - name: Create New Branch from Dev
+    - name: Checkout Lab Branch
       run: |
-        git checkout -b lab
+        git fetch origin
+        git checkout -b lab origin/lab || git checkout --orphan lab
+
+    - name: Copy gym_vectorvelocity Directory
+      run: |
+        git checkout dev -- gym_vectorvelocity
+
+    - name: Commit Changes
+      run: |
+        git add gym_vectorvelocity
+        git commit -m "Sync gym_vectorvelocity from dev to lab"
 
     - name: Push to Lab Branch
       run: |
