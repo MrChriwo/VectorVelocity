@@ -12,16 +12,20 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     cmake \
     libopenmpi-dev \
     zlib1g-dev \
-    && rm -rf /var/index/lib/apt/lists/*
+    git \
+    && rm -rf /var/lib/apt/lists/*
 
-COPY requirements.txt /workspace/requirements.txt
-
-RUN pip install --no-cache-dir -r /workspace/requirements.txt
-
+# Copy all files to /workspace
 COPY . /workspace
 
-RUN pip install jupyter
+# Set working directory
+WORKDIR /workspace
 
+# Run the Python script to install requirements
+RUN pip install --no-cache-dir -r requirements-dev.txt \
+    && pip install jupyter
+
+# Clean up unnecessary packages
 RUN apt-get purge -y \
     build-essential \
     cmake \
@@ -31,6 +35,4 @@ RUN apt-get purge -y \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-CMD ["jupyter", "notebook", "--ip='0.0.0.0'", "--port=8888", "--no-browser", "--allow-root", "--NotebookApp.token=''", "--Notebookup.password=''"]
-
-EXPOSE 8888
+CMD ["bash"]
