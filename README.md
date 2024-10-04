@@ -8,23 +8,22 @@
 ![Python Version](https://img.shields.io/badge/python-3.9%20|%203.10%20|%203.11%20|%203.12-blue.svg)
 [![PyPI version](https://img.shields.io/pypi/v/vector-velocity-gym.svg)](https://pypi.org/project/vector-velocity-gym/)
 
-
 # Table of Contents
 
 - [🙋‍♂️ Introduction](#introduction)
-- [🎮 Enviornment Description](#enviornment-description)
-    - [Third Party Assets](#third-party-assets)
+- [🎮 Environment Description](#Environment-description)
+  - [Third Party Assets](#third-party-assets)
 - [🚀 Getting Started](#getting-started)
 - [🤖 RL Agent](#rl-agent)
-    - [Problem Domain](#problem-domain)
-    - [Agents](#agents)
-- [💻 Contributing](#contributing) 
+  - [Problem Domain](#problem-domain)
+  - [Agents](#agents)
+- [💻 Contributing](#contributing)
 
-# Introduction 
+# Introduction
 
 VectorVelocity is a space-themed OpenAI Gym environment designed for reinforcement learning. Users pilot a spaceship through an asteroid field while collecting coins. The environment increases in difficulty as the speed escalates, with asteroids and coins spawning randomly, providing dynamic challenges that are ideal for developing and refining Agents
 
-# Enviornment Description 
+# Environment Description
 
 In VectorVelocity, the player controls a spaceship moving across three lanes. The objective is to collect as many coins as possible while avoiding collisions with asteroids that move from the top of the screen to the bottom. As the game progresses, the speed increases, making the game increasingly difficult.
 
@@ -42,23 +41,21 @@ We extend a huge thanks to the mentioned authors for making their work freely av
 
 To install the Vector Velocity Environment, you can use pip. Simply run the following command in your terminal:
 
-
 ```sh
 pip install vector-velocity-gym
 ```
 
-After installing the environment, you may want to test the installation and explore how to build or use the environment effectively. 
+After installing the environment, you may want to test the installation and explore how to build or use the environment effectively.
 
 For comprehensive guides and examples, please visit our [offical documentation](https://mrchriwo.github.io/VectorVelocity/)
 
-
 # RL Agent
 
-## Problem Domain 
+## Problem Domain
+
 The challenge for the RL agent in VectorVelocity is to learn optimal strategies for maximizing the score by skillfully collecting coins while avoiding asteroids. The agent is required to make decisions in real-time, adjusting to the game's increasing speed and the randomness of asteroid placements. Additionally, some coins spawn between asteroids in positions that may not always be reachable, adding a layer of decision-making complexity. This requires the player, and consequently the RL agent, to assess whether pursuing a coin is worth the risk of potential collision. This problem domain provides a rich and challenging environment for exploring and refining reinforcement learning techniques.
 
-
-## Agents 
+## Agents
 
 We have decided to use the Proximal Policy Optimization (PPO) algorithm to train an agent within our environment. PPO, a reinforcement learning algorithm developed by OpenAI, is known for its robustness and efficiency in learning policies for various types of environments.
 
@@ -68,7 +65,6 @@ For those interested in seeing a practical implementation or experimenting with 
 
 To access and contribute to the ongoing agent development, switch to the `lab` branch:
 
-# Contributing 
+# Contributing
 
 We welcome everyone to contribute to the project. Share your ideas, engage in discussions, and help us improve VectorVelocity. To get started, please check out the [CONTRIBUTING.md](CONTRIBUTING.md) file in the repo for detailed guidelines.
-
